@@ -1,0 +1,48 @@
+{
+  "model_version": "phase3-sweep-v6",
+  "config": {
+    "data_size_days": [
+      0,
+      30,
+      90,
+      365,
+      1095,
+      "full"
+    ],
+    "data_size_sweep_seeds": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "quantile_levels": [
+      0.1,
+      0.2,
+      0.3,
+      0.4,
+      0.5,
+      0.6,
+      0.7,
+      0.8,
+      0.9
+    ],
+    "local_emos_min_rows": 5,
+    "chronological_descending": true,
+    "days_per_case_measured": 3.4832535885167464,
+    "n_matched_instances": 737809,
+    "n_overflow_warnings_by_n_days": {
+      "0": 0,
+      "30": 0,
+      "90": 0,
+      "365": 0,
+      "1095": 0,
+      "full": 5
+    }
+  },
+  "config_hash": "e92eda6cf2ab4c8a",
+  "git_sha": "b1134f947ca49ea64af761f48a56fdd2385ba83a",
+  "git_dirty": true,
+  "source_tree_sha256": "eb0b815daa8c742b384dba39485943afdb5fc6c2ba2599716dca5699322e35db",
+  "written_at": "2026-09-07T18:46:30.626304+00:00"
+}

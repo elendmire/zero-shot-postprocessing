@@ -1,0 +1,53 @@
+{
+  "model_version": "phase3-lead-analysis-v2",
+  "config": {
+    "lead_time_buckets": [
+      [
+        0.0,
+        24.0,
+        "0-24h"
+      ],
+      [
+        24.0,
+        72.0,
+        "24-72h"
+      ],
+      [
+        72.0,
+        120.0,
+        "72-120h"
+      ]
+    ],
+    "data_size_days": [
+      0,
+      30,
+      90,
+      365,
+      1095,
+      "full"
+    ],
+    "quantile_levels": [
+      0.1,
+      0.2,
+      0.3,
+      0.4,
+      0.5,
+      0.6,
+      0.7,
+      0.8,
+      0.9
+    ],
+    "low_n_k_grid": [
+      1,
+      2,
+      3,
+      5,
+      7
+    ]
+  },
+  "config_hash": "40a985c4759fa54c",
+  "git_sha": "b1134f947ca49ea64af761f48a56fdd2385ba83a",
+  "git_dirty": true,
+  "source_tree_sha256": "e556b7419f4e068cea65174b5180cc8ea708842941166b24277fedbc3398693c",
+  "written_at": "2026-09-06T16:53:57.197578+00:00"
+}

@@ -1,0 +1,25 @@
+{
+  "model_version": "phase3-pit-v1",
+  "config": {
+    "quantile_levels": [
+      0.1,
+      0.2,
+      0.3,
+      0.4,
+      0.5,
+      0.6,
+      0.7,
+      0.8,
+      0.9
+    ],
+    "n_bins": 10,
+    "local_emos_min_rows": 5,
+    "emos_local_station_coverage_fraction": 1.0,
+    "n_canonical_instances": 737809
+  },
+  "config_hash": "990a7f494e3c2732",
+  "git_sha": "c145f5253477177d9d1202d742a0ff334988c08f",
+  "git_dirty": true,
+  "source_tree_sha256": "bfcb23226410434e6b06b706910a276adbdaca24860917cf2336e49d054df275",
+  "written_at": "2026-09-06T15:22:38.067413+00:00"
+}

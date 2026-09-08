@@ -1,0 +1,28 @@
+{
+  "n_groups_attempted": 3,
+  "call_succeeded": true,
+  "error": null,
+  "per_group_diffs": [
+    {
+      "station_id": "460",
+      "real_vs_mean_only_K": 0.28410831093788147,
+      "real_vs_permuted_K": 0.1980963796377182,
+      "real_vs_constant_K": 0.2627834677696228
+    },
+    {
+      "station_id": "460",
+      "real_vs_mean_only_K": 0.47714653611183167,
+      "real_vs_permuted_K": 0.511080801486969,
+      "real_vs_constant_K": 0.41641929745674133
+    },
+    {
+      "station_id": "460",
+      "real_vs_mean_only_K": 0.6273543834686279,
+      "real_vs_permuted_K": 0.547951340675354,
+      "real_vs_constant_K": 0.5051660537719727
+    }
+  ],
+  "distinguishable_from_permuted": true,
+  "distinguishable_from_constant": true,
+  "distinguishable_from_mean_only": true
+}

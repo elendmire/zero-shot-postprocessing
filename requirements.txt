@@ -1,0 +1,18 @@
+# Core dependencies for the analysis/testing path (works without a GPU).
+# Mirrors pyproject.toml; kept in sync manually.
+numpy>=1.26.4
+pandas>=2.2
+pyarrow>=14
+pyyaml>=6.0
+scipy>=1.11
+matplotlib>=3.8
+xarray>=2024.1
+netCDF4>=1.6
+torch>=2.2
+pytest>=8.0
+
+# Needed only to actually run TimesFM-3 inference (Section "Reproducing the
+# TimesFM-3 results" in README.md), on top of the CPU-only torch above (which
+# DRN needs). Not required to run the test suite, to regenerate figures, or
+# to rebuild the manuscript from already-persisted results/ files.
+# timesfm==3.0.1

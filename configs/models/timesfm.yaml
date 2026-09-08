@@ -1,0 +1,8 @@
+# configs/models/timesfm.yaml
+name: timesfm-3
+group: tsfm_zero_shot
+checkpoint: google/timesfm-3.0-pytorch
+frozen: true
+covariates:
+  past_future: [ensemble_mean, ensemble_spread]
+# BLOCKED: exact covariate field names TBD once EUPPBench build.py output schema exists.

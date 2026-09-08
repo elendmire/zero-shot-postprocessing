@@ -1,0 +1,25 @@
+{
+  "model_version": "phase3-sweep-v6",
+  "config": {
+    "quantile_levels": [
+      0.1,
+      0.2,
+      0.3,
+      0.4,
+      0.5,
+      0.6,
+      0.7,
+      0.8,
+      0.9
+    ],
+    "compared_n_days": [
+      30,
+      90
+    ]
+  },
+  "config_hash": "66aa23c30ac327f7",
+  "git_sha": "b1134f947ca49ea64af761f48a56fdd2385ba83a",
+  "git_dirty": true,
+  "source_tree_sha256": "e556b7419f4e068cea65174b5180cc8ea708842941166b24277fedbc3398693c",
+  "written_at": "2026-09-06T16:39:32.454002+00:00"
+}

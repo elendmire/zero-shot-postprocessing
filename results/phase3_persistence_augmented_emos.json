@@ -1,0 +1,32 @@
+{
+  "model_version": "phase3-persistence-emos-v1",
+  "config": {
+    "lead_time_bucket": "0-24h",
+    "quantile_levels": [
+      0.1,
+      0.2,
+      0.3,
+      0.4,
+      0.5,
+      0.6,
+      0.7,
+      0.8,
+      0.9
+    ],
+    "persistence_params": {
+      "a": 0.009515371360460531,
+      "b": 0.92078323171657,
+      "c": 1.1545149372458923,
+      "d": 0.2854463886562397,
+      "e": 0.07861205957884848
+    },
+    "n_train_rows": 813890,
+    "n_eval_instances": 140457,
+    "n_full_bucket_instances": 140544
+  },
+  "config_hash": "85cad620af740140",
+  "git_sha": "b1134f947ca49ea64af761f48a56fdd2385ba83a",
+  "git_dirty": true,
+  "source_tree_sha256": "20a4aad7cd4c3a10e94fbe28e1f9d522a48a3b0c31b80eb39092bf4e00431e97",
+  "written_at": "2026-09-07T17:17:01.660725+00:00"
+}

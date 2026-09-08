@@ -1,0 +1,4 @@
+quantile_levels: [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
+data_size_days: [0, 30, 90, 365, 1095, "full"]
+seeds: [0, 1, 2]
+data_size_sweep_seeds: [0, 1, 2, 3, 4]

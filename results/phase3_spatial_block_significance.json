@@ -1,0 +1,27 @@
+{
+  "model_version": "phase3-spatial-block-v1",
+  "config": {
+    "quantile_levels": [
+      0.1,
+      0.2,
+      0.3,
+      0.4,
+      0.5,
+      0.6,
+      0.7,
+      0.8,
+      0.9
+    ],
+    "n_days_target": 30,
+    "expected_k": 9,
+    "bootstrap_seed": 0,
+    "n_matched_instances": 737809,
+    "n_unique_stations": 49,
+    "n_unique_days": 725
+  },
+  "config_hash": "facdf79c64cfd50f",
+  "git_sha": "c145f5253477177d9d1202d742a0ff334988c08f",
+  "git_dirty": true,
+  "source_tree_sha256": "7463bf55f6b1c2cadfcead7e80c12ceaeda1718d58a044c7e626d93b3da70a90",
+  "written_at": "2026-09-05T12:14:04.608175+00:00"
+}

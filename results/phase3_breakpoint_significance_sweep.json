@@ -1,0 +1,32 @@
+{
+  "model_version": "phase3-breakpoint-significance-v1",
+  "config": {
+    "quantile_levels": [
+      0.1,
+      0.2,
+      0.3,
+      0.4,
+      0.5,
+      0.6,
+      0.7,
+      0.8,
+      0.9
+    ],
+    "k_grid": [
+      1,
+      2,
+      3,
+      5,
+      7,
+      9
+    ],
+    "local_emos_min_rows": 5,
+    "bootstrap_seed": 0,
+    "n_matched_instances": 737809
+  },
+  "config_hash": "c87bbd35c840c84f",
+  "git_sha": "b1134f947ca49ea64af761f48a56fdd2385ba83a",
+  "git_dirty": true,
+  "source_tree_sha256": "653dc6ee69ef22acde2b456679d09a7b4fadf1f9be111ea9948b3c6a2353f1f2",
+  "written_at": "2026-09-07T15:50:32.085460+00:00"
+}

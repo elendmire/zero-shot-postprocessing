@@ -1,0 +1,91 @@
+% ZeroPP manuscript.
+%
+% Document class: plain article for now. Swap for the target journal's
+% official LaTeX template at submission time (primary target: Machine
+% Learning: Earth, IOP Publishing -- check iopart.cls / IOP's current
+% author-template package once accepted for review; secondary targets QJRMS
+% (Wiley) / AIES (AMS) have their own templates too. Do not submit with this
+% generic class.
+\documentclass[11pt]{article}
+
+\usepackage[a4paper,margin=2.5cm]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{natbib}
+\usepackage[breaklinks=true]{hyperref}
+\usepackage{xcolor}
+
+% Auto-generated numbers -- every figure/number cited in the text comes from
+% here (scripts/generate_numbers.py reads results/ files and configs). Never
+% hand-type a number from a results file directly in a .tex source file.
+\input{generated_numbers}
+
+\title{Zero-shot time series foundation models for statistical
+  postprocessing of weather forecasts: how much training data do they
+  replace?}
+% Title decision (P3, panel review, 2026-09-07): Option A from
+% docs/title_options.md, CONFIRMED FINAL by the author -- the plural
+% "foundation models" stays, and the single-model-scope caveat this choice
+% requires lives in the Introduction's closing paragraph and the
+% Conclusion's closing paragraph instead of a title change. Do not revisit.
+
+\author{\"{O}mer Faruk Avc{\i}\thanks{\texttt{avcio20@itu.edu.tr}}\\[4pt]
+\parbox{0.85\linewidth}{\centering\small Department of Climate Science
+and Meteorological Engineering, Faculty of Aeronautics and Astronautics,
+\.{I}stanbul Technical University, \.{I}stanbul, T\"{u}rkiye}}
+\date{}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Statistical postprocessing of ensemble forecasts is usually trained on
+multi-year, per-station archives; a zero-shot time series foundation
+model needs none. Using EUPPBench \EuppbenchVersion{}'s German subset
+(\NStations{} stations, 0--\MaxLeadHours{}~h; all methods scored on
+\NMatchedInstances{} matched instances), we
+compare a frozen TimesFM-3 (ensemble mean as a past-future covariate)
+against Ensemble Model Output Statistics (EMOS) and a one-parameter
+variance-inflation rescaling. At full training data, every trained
+method beats TimesFM-3 on the Continuous Ranked Probability Score
+(CRPS); so does a fixed-climatological rescaling using no training data
+at all. Pooled EMOS's CRPS crosses TimesFM-3's at \BpCrpsPooledCases{}
+cases (\BpCrpsPooledDays{} days), though the crossing is significant
+only from \BpCrpsPooledSigK{} cases (\BpCrpsPooledSigDays{} days)
+onward, for both EMOS variants, under day-blocking. Coverage of the
+80\%-nominal interval crosses more slowly (\CoverageCrpsRatioPooled{}x
+and \CoverageCrpsRatioLocal{}x later than CRPS, pooled and local EMOS).
+TimesFM-3 retains a calibration-sharpness advantage: even a
+leakage-optimistic multiplier fit on test-set coverage needs
+\InflLeakyWidthDiffPoint{} K more at matched coverage (95\% CI
+[\InflLeakyWidthDiffCiLow{}, \InflLeakyWidthDiffCiHigh{}]). Its
+short-lead CRPS advantage reverses by \DurableCrossoverHours{}~h; a
+persistence-augmented EMOS closes only \PersistenceGapClosedPct{}\% of
+the gap, which does not support an information-asymmetry
+explanation, though not from architecture. Supplying ensemble spread as
+a second covariate does not close the calibration gap either: it
+worsens CRPS and reaches nominal coverage only with a wider interval.
+Overall, on CRPS this
+frozen model is mostly not competitive with a few days of
+station-specific training data -- with one exception that survives even
+a leakage-optimistic bound, and a short-lead advantage that the
+information-asymmetry explanation does not account for.
+\end{abstract}
+
+\input{sections/01_introduction}
+\input{sections/02_data}
+\input{sections/03_methods}
+\input{sections/04_results}
+\input{sections/05_discussion}
+\input{sections/06_conclusion}
+
+\input{sections/99_backmatter}
+
+\bibliographystyle{plainnat}
+\bibliography{refs}
+
+\end{document}

@@ -1,0 +1,28 @@
+{
+  "model_version": "phase3-sweep-v6",
+  "config": {
+    "low_n_k_grid": [
+      1,
+      2,
+      3,
+      5,
+      7
+    ],
+    "quantile_levels": [
+      0.1,
+      0.2,
+      0.3,
+      0.4,
+      0.5,
+      0.6,
+      0.7,
+      0.8,
+      0.9
+    ]
+  },
+  "config_hash": "f36a469817be3058",
+  "git_sha": "b1134f947ca49ea64af761f48a56fdd2385ba83a",
+  "git_dirty": true,
+  "source_tree_sha256": "e556b7419f4e068cea65174b5180cc8ea708842941166b24277fedbc3398693c",
+  "written_at": "2026-09-06T16:40:33.166701+00:00"
+}

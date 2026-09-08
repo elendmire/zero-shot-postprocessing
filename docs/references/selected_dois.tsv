@@ -1,0 +1,74 @@
+block	bibkey	doi	short_label	priority
+B1	gneiting_2005_emos	10.1175/mwr2904.1	Gneiting 2005 - EMOS, calibrated probabilistic forecasting	CORE
+B1	raftery_2005_bma	10.1175/mwr2906.1	Raftery 2005 - Bayesian model averaging	CORE
+B1	baran_2016_combining	10.1016/j.ijforecast.2018.01.005	Baran & Lerch 2016 - combining predictive distributions	HIGH
+B1	gebetsberger_2018_estimation	10.1175/mwr-d-17-0364.1	Gebetsberger 2018 - estimation methods, nonhomogeneous regression	HIGH
+B1	scheuerer_2013_precip_emos	10.1002/qj.2183	Scheuerer 2013 - EMOS for precipitation	MED
+B1	wilks_2018_enforcing_calibration	10.1002/qj.3185	Wilks 2018 - enforcing calibration in ensemble postprocessing	MED
+B1	schefzik_2018_dependence_chapter	10.1016/b978-0-12-812372-0.00004-2	Schefzik & Moller 2018 - postprocessing with dependence structures	MED
+B1	baran_2015_mixture_emos	10.1002/env.2380	Baran & Lerch 2015 - mixture EMOS for wind speed	LOW
+B2	rasp_2018_drn	10.1175/mwr-d-18-0187.1	Rasp & Lerch 2018 - neural networks for postprocessing (DRN)	CORE
+B2	schulz_2021_windgusts	10.1175/mwr-d-21-0150.1	Schulz & Lerch 2021 - systematic ML comparison, wind gusts	CORE
+B2	taillardat_2016_qrf	10.1175/mwr-d-15-0260.1	Taillardat 2016 - quantile regression forests	CORE
+B2	wessel_2024_leadtime_continuous	10.1002/qj.4701	Wessel 2024 - lead-time-continuous postprocessing (small-data rival)	CORE
+B2	jobst_2024_ts_emos	10.1002/qj.4844	Jobst 2024 - time-series EMOS for temperature	CORE
+B2	hoehlein_2023_permutation_invariant	10.1175/aies-d-23-0070.1	Hohlein 2023 - permutation-invariant NN postprocessing	HIGH
+B2	groenquist_2020_deep_learning_pp	10.1098/rsta.2020.0092	Gronquist 2020 - deep learning for postprocessing	MED
+B3	demaeyer_2023_euppbench	10.5194/essd-15-2635-2023	Demaeyer 2023 - EUPPBench dataset v1.0	CORE
+B3	mlakar_2023_spline_flows	10.1002/qj.4809	Mlakar 2023 - flexible probabilistic NN on EUPPBench	CORE
+B3	vanpoecke_2024_transformer	10.1175/aies-d-24-0127.1	Van Poecke 2024 - self-attentive transformer on EUPPBench	CORE
+B3	landry_2025_fmap	10.1002/qj.70055	Landry 2025 - FMAP, flow matching in-situ ensembles	HIGH
+B3	baran_2026_sharpness_penalty	10.48550/arxiv.2606.08587	Baran & Mihalina 2026 - sharpness penalty in NN postprocessing	HIGH
+B3	allen_2023_multivariate_calibration	10.1002/qj.4647	Allen 2023 - assessing calibration of multivariate forecasts	MED
+B4	das_2024_timesfm_icml	10.48550/arxiv.2310.10688	Das 2024 - TimesFM ICML proceedings version (PMLR v235, no DOI registered; arXiv DOI is the preprint of the same work, kept for cross-reference) - special-sourced via PMLR page, not doi.org	CORE
+B4	ansari_2024_chronos	10.48550/arxiv.2403.07815	Ansari 2024 - Chronos	CORE
+B4	ansari_2025_chronos2	10.48550/arxiv.2510.15821	Ansari 2025 - Chronos-2 (VERIFY exact title)	CORE
+B4	woo_2024_moirai	10.48550/arxiv.2402.02592	Woo 2024 - Moirai, unified universal forecasting	HIGH
+B4	yamaguchi_2026_citras_fm	10.48550/arxiv.2606.10798	Yamaguchi 2026 - CITRAS-FM, covariate-informed tiny TSFM	HIGH
+B4	rasul_2023_lag_llama	10.48550/arxiv.2310.08278	Rasul 2023 - Lag-Llama	MED
+B4	hoo_2025_tabpfn_ts	10.48550/arxiv.2501.02945	Hoo 2025 - TabPFN-v2 extended to time series	MED
+B4	dooley_2023_forecastpfn	10.48550/arxiv.2311.01933	Dooley 2023 - ForecastPFN, synthetically trained zero-shot	MED
+B4	oreshkin_2020_zeroshot_meta	10.1609/aaai.v35i10.17115	Oreshkin 2020 - meta-learning for zero-shot transfer	LOW
+B4	gruver_2023_llmtime	10.48550/arxiv.2310.07820	Gruver 2023 - LLMs are zero-shot time series forecasters	LOW
+B5	aksu_2024_gift_eval	10.48550/arxiv.2410.10393	Aksu 2024 - GIFT-Eval benchmark	CORE
+B5	li_2026_tsfmaudit	10.48550/arxiv.2605.26161	Li 2026 - TSFMAudit, data contamination in TSFMs	CORE
+B5	chiazagomekpere_2026_leakage_aware	10.58776/ijitcsa.v4i2.254	Chiazagomekpere 2026 - leakage-aware zero/few-shot benchmarking	HIGH
+B5	pan_2026_contamination_electricity	10.48550/arxiv.2607.02623	Pan & Ezzat 2026 - contamination risk, electricity price TSFM	HIGH
+B5	meyer_2025_rethinking_eval	10.48550/arxiv.2510.13654	Meyer 2025 - rethinking evaluation in the TSFM era	HIGH
+B5	balloccu_2024_leak_cheat_repeat	10.48550/arxiv.2402.03927	Balloccu 2024 - contamination and evaluation malpractice	LOW
+B7	kreusel_2026_covariates_key	10.1145/3765611.3815507	Kreusel 2026 - covariates are the key (DIRECTLY supports our finding)	CORE
+B7	auer_2025_icl_covariates	10.48550/arxiv.2506.03128	Auer 2025 - zero-shot forecasting with covariates via ICL	CORE
+B7	qin_2025_cora	10.48550/arxiv.2510.12681	Qin 2025 - CoRA, covariate-aware adaptation of TSFMs	CORE
+B7	zhang_2025_context_parroting	10.48550/arxiv.2505.11349	Zhang & Gilpin 2025 - context parroting, trivial baseline beats TSFMs	CORE
+B7	zhang_2024_chaotic_zeroshot	10.48550/arxiv.2409.15771	Zhang & Gilpin 2024 - zero-shot forecasting of chaotic systems	HIGH
+B8	gneiting_2007_proper_scoring	10.1198/016214506000001437	Gneiting & Raftery 2007 - strictly proper scoring rules	CORE
+B8	gneiting_2007_calibration_sharpness	10.1111/j.1467-9868.2007.00587.x	Gneiting Balabdaoui Raftery 2007 - calibration and sharpness (OUR FINDING 2)	CORE
+B8	hersbach_2000_crps	10.1175/1520-0434(2000)015<0559:dotcrp>2.0.co;2	Hersbach 2000 - CRPS decomposition (DOI resolved via Crossref 2026-09-05)	CORE
+B8	allen_2023_weighted_scoringrules	10.18637/jss.v110.i08	Allen 2023 - weighted scoringRules (twCRPS source)	CORE
+B8	jordan_2017_scoringrules	10.18637/jss.v090.i12	Jordan 2017 - evaluating forecasts with scoringRules	HIGH
+B8	taillardat_2019_extremes	10.1016/j.ijforecast.2022.07.003	Taillardat 2019 - evaluating probabilistic forecasts of extremes	HIGH
+B8	leutbecher_2020_crps_changes	10.1002/qj.3926	Leutbecher & Haiden 2020 - understanding CRPS changes	MED
+B8	arnold_2023_crps_decomposition	10.1214/24-ejs2316	Arnold 2023 - decompositions of the mean CRPS	MED
+B8	bolin_2019_scale_invariance	10.1214/22-sts864	Bolin & Wallin 2019 - CRPS weights large-uncertainty cases	MED
+B8	zamo_2018_crps_estimation	10.1007/s11004-017-9709-7	Zamo & Naveau 2018 - CRPS estimation with limited information	MED
+B8b	coroneo_2020_small_samples	10.1002/jae.2756	Coroneo & Iacone 2020 - predictive accuracy in small samples (OUR N=9 CASE)	CORE
+B8b	diebold_2015_twenty_years	10.1080/07350015.2014.983236	Diebold 2015 - comparing predictive accuracy twenty years later	HIGH
+B8b	coroneo_2024_strong_dependence	10.1016/j.ijforecast.2024.11.003	Coroneo & Iacone 2024 - testing for equal predictive accuracy with strong dependence (DOI resolved via Crossref 2026-09-05)	MED
+B9	lam_2023_graphcast	10.1126/science.adi2336	Lam 2023 - GraphCast	CORE
+B9	price_2024_gencast	10.1038/s41586-024-08252-9	Price 2024 - GenCast	CORE
+B9	bodnar_2025_aurora	10.1038/s41586-025-09005-y	Bodnar 2025 - Aurora, Earth system foundation model	CORE
+B9	benbouallegue_2024_rise	10.1175/bams-d-23-0162.1	Ben-Bouallegue 2024 - rise of data-driven weather forecasting	HIGH
+B9	bonavita_2024_limitations	10.1029/2023gl107377	Bonavita 2024 - limitations of current ML weather models	HIGH
+B9	zhang_2026_physics_outperform	10.1126/sciadv.aec1433	Zhang 2026 - physics-based models outperform AI on record extremes	HIGH
+B10	molinaro_2026_universal_downscaling	10.48550/arxiv.2602.11893	Molinaro 2026 - universal diffusion downscaling (KEY RIVAL)	CORE
+B10	mardani_2025_corrdiff	10.1038/s43247-025-02042-5	Mardani 2025 - residual corrective diffusion, km-scale	HIGH
+B6	sun_2026_streamflow_zeroshot	10.1088/3049-4753/ae4982	Sun 2026 - zero-shot streamflow forecasting with TSFMs, are we there yet	CORE
+B6	bharadwaj_2026_air_quality_arena	10.48550/arxiv.2607.19381	Bharadwaj 2026 - Air Quality Arena, multi-region TSFM benchmark	CORE
+B1	vannitsem_2020_postprocessing_review	10.1175/bams-d-19-0308.1	Vannitsem 2021 - statistical postprocessing review (BAMS, online 2020)	CORE
+B2	muschinski_2023_mos_random_forests	10.5194/npg-30-503-2023	Muschinski 2023 - MOS random forests, small-N rival	CORE
+B8	hamill_2001_rank_histograms	10.1175/1520-0493(2001)129<0550:iorhfv>2.0.co;2	Hamill 2001 - rank histogram interpretation (DOI resolved via Crossref 2026-09-05)	CORE
+B8	dirkson_2025_misdiagnosing_reliability	10.1002/qj.70186	Dirkson 2026 - misdiagnosing ensemble reliability (QJRMS, published 2026)	CORE
+B8	broecker_2018_serial_dependence	10.1002/qj.3379	Brocker 2018 - reliability under serial dependence	HIGH
+B8	broecker_2020_stratified_rank	10.1002/qj.3778	Brocker 2020 - stratified rank histograms under serial dependence	MED
+B8b	diebold_1995_comparing_accuracy	10.1080/07350015.1995.10524599	Diebold & Mariano 1995 - the original test (JBES, not the 1994 NBER working paper)	CORE
+B8b	luger_2004_exact_tests	10.34989/swp-2004-2	Luger 2004 - exact distribution-free tests, contemporaneous correlation (Bank of Canada Staff Working Paper 04-2, never journal-published per a time-boxed search 2026-09-05)	HIGH

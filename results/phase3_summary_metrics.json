@@ -1,0 +1,22 @@
+{
+  "model_version": "phase3-summary-v1",
+  "config": {
+    "quantile_levels": [
+      0.1,
+      0.2,
+      0.3,
+      0.4,
+      0.5,
+      0.6,
+      0.7,
+      0.8,
+      0.9
+    ],
+    "source": "results/phase2_comparison_raw.parquet"
+  },
+  "config_hash": "16c050190422cf01",
+  "git_sha": "e3ff640a7e5ed1db961f93bf0eefee094cf837e4",
+  "git_dirty": true,
+  "source_tree_sha256": "6a828e38d2f7bbf975393c951afd83930e243f4b94eda609ef3c3ebda855f3fa",
+  "written_at": "2026-09-04T08:19:16.352317+00:00"
+}
