@@ -1,0 +1,43 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# OS
+.DS_Store
+
+# Data and model weights (obtained separately -- see README "Data" section).
+# Anchored to repo root (leading slash) -- an unanchored "data/" here would
+# also match src/zeropp/data/, a real source package, not just this top-level
+# raw-data directory. (Caught during the clean-clone verification: pytest
+# collection failed with "No module named 'zeropp.data'" because git was
+# silently excluding it.)
+/data/
+/model_cache/
+
+# Large intermediate result files (small aggregate results ARE committed --
+# the manuscript's numbers are generated from them, see scripts/generate_numbers.py)
+results/phase2_comparison_raw.parquet
+results/phase2_comparison_raw.json
+
+# Figures: vector sources (svg/pdf) are committed, raster previews are not
+figures/*.png
+
+# LaTeX build artifacts
+paper/*.aux
+paper/*.bbl
+paper/*.blg
+paper/*.fdb_latexmk
+paper/*.fls
+paper/*.log
+paper/*.out
+paper/*.synctex.gz
+
+# Internal development-process notes (review rounds, SSH run tracking) --
+# kept locally only, not part of the published repo. See README.
+docs/development/
+
+# Secrets
+.env
+.env.*

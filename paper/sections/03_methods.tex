@@ -1,0 +1,289 @@
+\section{Methods}
+\label{sec:methods}
+
+\subsection{Postprocessing methods compared}
+\label{sec:methods-list}
+
+We compare six families of methods, all sharing a single interface: given a
+station's ensemble forecast summary for a lead time, produce a predictive
+distribution for the observed \(2\,\mathrm{m}\) temperature at that lead,
+expressed as the \NQuantileLevels{} quantiles \QuantileLevelsList{} (a fixed
+global constant used identically by every method in this study).
+
+\textbf{Raw ensemble.} The empirical distribution of the raw NWP ensemble
+members at each station and lead time, used unmodified. This is the
+zero-shot, zero-parameter baseline every postprocessing method is expected to
+improve on.
+
+\textbf{EMOS.} Ensemble Model Output Statistics \citep{gneiting_2005_emos}, a
+nonhomogeneous Gaussian regression fit by minimizing the closed-form Gaussian
+CRPS \citep{gneiting_2007_proper_scoring} over the training set:
+\(\mu = a + b \cdot \bar{x}\), \(\sigma^2 = \exp(c) + \exp(d) \cdot s^2\),
+where \(\bar{x}\) and \(s^2\) are the ensemble mean and variance. We fit two
+variants of this same model, differing only in how many stations share one
+parameter set: \emph{pooled} EMOS fits one global \((a,b,c,d)\) across all
+\NStations{} stations, following the field's standard practice
+\citep{gneiting_2005_emos,raftery_2005_bma}; \emph{local} EMOS fits a
+separate \((a,b,c,d)\) per station whenever that station has enough training
+rows to do so (we require at least 5 rows; stations below this threshold are
+excluded from local EMOS's evaluation at that training size, and the
+resulting station-coverage fraction is reported alongside every local-EMOS
+result). \citet{baran_2016_combining} and \citet{gebetsberger_2018_estimation}
+report comparable station-adaptive EMOS variants at small training sizes,
+the regime this paper's breakpoint curve targets directly.
+
+\textbf{DRN.} The Distributional Regression Network of
+\citet{rasp_2018_drn}: a feed-forward neural network with a learned
+per-station embedding, taking the ensemble mean and variance as input and
+outputting \((\mu, \log\sigma^2)\) parameters of the same Gaussian family
+EMOS uses, trained by gradient descent (Adam) on the same closed-form
+Gaussian CRPS loss, reimplemented in PyTorch so it is differentiable. Unlike
+the original DRN, which additionally uses auxiliary NWP fields and lead time
+as inputs, our training pipeline pools all \NLeadTimes{} lead times into one
+fit and does not expose lead time to any model (Section~\ref{sec:limitations});
+DRN and EMOS are therefore compared under the same feature constraint, not
+DRN's originally-intended full feature set. \citet{schulz_2021_windgusts}
+runs a systematic comparison of neural postprocessing architectures under
+this same feature-constrained setup, the closest methodological precedent
+to our own DRN evaluation. Time-series/lead-time-continuous EMOS variants
+\citep{jobst_2024_ts_emos,wessel_2024_leadtime_continuous} target the
+small-training-data and lead-time-resolved regimes this paper's breakpoint
+curve also explores, without themselves being baselines here (a wider
+survey of the neural-postprocessing and quantile-regression literature is
+given in Section~\ref{sec:intro}).
+
+\textbf{TimesFM-3 (zero-shot).} The 3.0 release of TimesFM, a frozen,
+pretrained decoder-only time series foundation model. The architecture
+family is described in \citet{das_2024_timesfm_icml}; that paper describes the
+original TimesFM 1.0 decoder-only architecture and does not cover the
+3.0 release's covariate support, which Section~\ref{sec:covariates}
+sources directly rather than through that citation. This project uses
+checkpoint \texttt{google/timesfm-3.0-pytorch}, with no fine-tuning,
+task-specific training, or parameter updates of any kind.
+Section~\ref{sec:covariates} describes its input construction. Contrasted
+with generalist AI weather-prediction models that operate on full spatial
+fields \citep{lam_2023_graphcast,price_2024_gencast,bodnar_2025_aurora} --
+TimesFM-3 is used here in univariate, single-station mode, not as a
+spatial forecasting system, and is not compared against those models
+here.
+
+\textbf{Variance-inflation baseline.} A trivial, zero/low-parameter
+alternative: scale the raw ensemble's per-instance spread by a single
+multiplier \(\lambda\) and read off Gaussian quantiles at the same
+\NQuantileLevels{} levels. We report \NVarianceInflationVariants{} variants,
+each answering a different question about whether TimesFM-3's apparent skill
+is trivially reproducible \citep{zhang_2025_context_parroting}: (a) a
+CRPS-optimal \(\lambda\) fit by minimizing training-set CRPS at each training
+size \(N\) (fair comparison against EMOS, which also uses \(N\) training
+cases); (b) a fixed climatological \(\lambda\), requiring no data at all
+(fair comparison against TimesFM-3's own zero-shot status); (c) a
+coverage-matched \(\lambda\), fit on training data only (never on test-set
+coverage) by root-finding to reach as closely as a training-fit multiplier
+allows TimesFM-3's own empirical coverage, then evaluated for interval
+width on the test set -- this directly asks whether TimesFM-3's
+calibration, not just its CRPS, is achievable by a one-parameter
+rescaling. Because \(\lambda\) is fit on training data and applied to a
+different test set, the coverage this variant actually reaches on test
+does not land exactly on the training-time target; we report both values
+together (Section~\ref{sec:results-full}) rather than the word
+``exactly.'' (d) a leakage-optimistic \(\lambda\), fit by root-finding
+directly on \emph{test-set} coverage (never on training data) to reach
+TimesFM-3's own empirical coverage -- the deliberately
+leakage-contaminated counterpart to (c), answering not "what can a
+legitimate, leakage-free trivial rescaling achieve" but "what is the
+ceiling on what any trivial rescaling could ever achieve at this
+coverage target, even with an unfair advantage." Variant (d) is never
+presented as a legitimate baseline result; it exists solely to bound how
+much of variant (c)'s width disadvantage against TimesFM-3
+(Section~\ref{sec:results-full}) could in principle be a leakage
+artifact of the train/test split rather than a real limit of trivial
+rescaling.
+
+\subsection{TimesFM-3 covariate construction, and the information asymmetry it creates}
+\label{sec:covariates}
+
+TimesFM-3's target series is a station's own observation history; its
+past-future (dynamic) covariate channel\footnote{Native past-future
+covariate support is documented for the 3.0 release specifically, not in
+the original TimesFM architecture paper \citep{das_2024_timesfm_icml}: model
+card at \url{https://huggingface.co/google/timesfm-3.0-pytorch} and
+release notes at
+\url{https://research.google/blog/timesfm-3-a-zero-shot-foundation-model-for-multivariate-forecasting/}
+(Google Research; both accessed 2026-09-07).} is filled with the ensemble mean,
+supplied as a value known across the entire forecast horizon rather than
+only in the past. This study supplied only the ensemble mean to this
+channel; ensemble spread was not. This is an input-design choice, not a
+confirmed architectural limit: the installed package's own source
+documents the channel's accepted shape as genuinely multi-channel, and a
+preliminary test confirms the model's output is measurably sensitive to
+a second channel's real informational content, not merely its presence
+(Section~\ref{sec:limitations} reports this preliminary test;
+Section~\ref{sec:discussion-covariate-check} reports the full evaluation
+it motivated). The model is entirely frozen: no fine-tuning,
+no gradient updates, and no task-specific training of any kind are
+performed at any point in this study.
+\citet{kreusel_2026_covariates_key} independently reports that covariate
+handling is the dominant factor in time series foundation model
+performance; a coding error encountered during this project's own
+development, where an incoherent covariate channel measurably degraded
+TimesFM-3's apparent skill before being corrected, is consistent with that
+finding (Section~\ref{sec:pitfall}).
+
+This covariate construction leaves TimesFM-3 and the trained statistical
+methods (EMOS, DRN) with genuinely different information, as this study
+was actually run: TimesFM-3 sees the station's own recent observation
+history but was not given ensemble spread; EMOS and DRN see ensemble
+spread but no observation history at all (Table~\ref{tab:info-channels}).
+We treat this asymmetry as a candidate explanation for three separate
+empirical results in this paper (Section~\ref{sec:results}): TimesFM-3's
+short-lead advantage (recent observations carry strong persistence
+information at short lead times, information EMOS/DRN were not given
+observation history to use in this study's configuration),
+its calibration deficit relative to EMOS (TimesFM-3's covariate channel
+was not given ensemble spread, the direct measure of forecast
+uncertainty, in this study), and its long-lead disadvantage (observation
+history loses predictive value as lead time grows, leaving TimesFM-3's
+remaining information -- the ensemble mean alone -- no richer than what
+EMOS already uses). This explanation was conditional on whether ensemble spread could be
+added to TimesFM-3's covariate channel without degrading it -- a
+question this project has since tested directly
+(Section~\ref{sec:discussion-covariate-check}). The channel does accept
+a second, simultaneous input (Section~\ref{sec:limitations}), but
+supplying spread this way did not close the calibration deficit: CRPS
+and interval width both worsen, and coverage moves only marginally
+closer to the nominal target at a substantially wider interval. This
+does not confirm the information-asymmetry framing for this half of the
+mechanism question, but it does not confirm an architectural explanation
+either (Section~\ref{sec:discussion-covariate-check},
+Section~\ref{sec:conclusion}).
+Section~\ref{sec:discussion} tests both halves of this explanation
+directly: the observation-history half by augmenting EMOS with a
+persistence predictor, and the calibration half by supplying TimesFM-3
+with ensemble spread as a second covariate.
+
+\begin{table}[htbp]
+\centering
+\caption{Information supplied to each method in this study -- not each
+method's inherent architectural capability. TimesFM-3's ``no'' for
+ensemble spread reflects this study's covariate design, not a confirmed
+limit of the 3.0 release (see note below and Section~\ref{sec:limitations}).}
+\label{tab:info-channels}
+\begin{tabular}{lccc}
+\toprule
+Method & Observation history & Ensemble mean & Ensemble spread \\
+\midrule
+EMOS (pooled / local) & no & yes & yes \\
+DRN & no & yes & yes \\
+TimesFM-3 (zero-shot) & yes & yes & no$^{\ast}$ \\
+Raw ensemble & no & yes (empirical) & yes (empirical) \\
+Variance-inflation baseline & no & no & yes (scaled) \\
+\bottomrule
+\end{tabular}
+
+\smallskip
+{\small $^{\ast}$Not supplied in this study. TimesFM-3's covariate
+parameter accepts a second, simultaneous channel by design (see the note
+above), and a full evaluation supplying it found CRPS and interval width
+both worsen, not improve (Section~\ref{sec:discussion-covariate-check}).}
+\end{table}
+
+Two other covariate-aware zero-shot approaches make a different design
+choice than the frozen, built-in covariate channel this paper relies on:
+\citet{auer_2025_icl_covariates} inject covariates through in-context
+examples rather than an architectural slot, requiring no model changes
+but also no guarantee the model attends to them the way a dedicated
+covariate channel would; \citet{qin_2025_cora} instead adapt a pretrained
+TSFM's covariate handling per-task through a small tuning step, which
+this paper's zero-shot, no-fine-tuning design (Section~\ref{sec:methods-list})
+deliberately avoids.
+
+\subsection{Metrics}
+\label{sec:metrics}
+
+The Continuous Ranked Probability Score (CRPS) is our primary metric.
+Every reported CRPS value in this paper, for every method, is computed by
+the same pinball-loss-based quantile estimator
+\citep{jordan_2017_scoringrules} applied to the identical
+\NQuantileLevels{}-level quantile representation: EMOS and DRN's own
+closed-form Gaussian CRPS \citep{gneiting_2007_proper_scoring,hersbach_2000_crps}
+is used only inside their training objective (Section~\ref{sec:methods-list}),
+never for a reported evaluation metric, so no method receives an
+analytic-CRPS advantage over the discretized estimator every other method
+is necessarily scored with. We additionally report the tail-weighted CRPS
+(twCRPS), the same pinball-loss estimator restricted to the upper two
+quantile levels (0.8, 0.9) \citep{allen_2023_weighted_scoringrules,taillardat_2019_extremes},
+as a check on tail behavior; \citet{zamo_2018_crps_estimation},
+\citet{bolin_2019_scale_invariance}, and \citet{arnold_2023_crps_decomposition}
+discuss estimator choice and decomposition properties of CRPS more broadly,
+and \citet{leutbecher_2020_crps_changes} interprets CRPS differences
+directly. We additionally report \emph{coverage@80\%}: the empirical
+fraction of observations falling within the predicted p10--p90 interval,
+against a nominal level of 0.80 -- not 0.90, since our fixed
+\NQuantileLevels{}-level quantile grid has no p05/p95 pair to compute a
+90\%-nominal interval from; every mention of coverage in this paper refers
+to this 80\%-nominal band and is labeled accordingly throughout. Finally we
+report \emph{interval width} (the p10--p90 range in Kelvin) as a measure of
+sharpness. Per \citet{gneiting_2007_calibration_sharpness}'s principle of
+maximizing sharpness subject to calibration, interval width is reported as a
+curve for every method and is never assigned a single ``better'' direction
+or a breakpoint of its own (Section~\ref{sec:breakpoint-def}): a narrower
+interval is only meaningful jointly with adequate coverage, not on its own.
+PIT histograms (Section~\ref{sec:results}) are likewise reported
+descriptively; \citet{broecker_2018_serial_dependence} and
+\citet{broecker_2020_stratified_rank} show that formal rank-uniformity
+hypothesis tests require correction for serial dependence, which our PIT
+values genuinely exhibit, so no such test is applied here
+(Section~\ref{sec:limitations}). \citet{dirkson_2025_misdiagnosing_reliability}
+further shows that coverage and rank-based reliability diagnostics can both
+be misled by the same covariance pathology; we do not claim these
+descriptive diagnostics are immune to that critique (Section~\ref{sec:limitations}).
+
+\subsection{Statistical significance}
+\label{sec:significance}
+
+The evaluation set is a station~$\times$~time~$\times$~lead panel, not a
+single independent sample: instances share temporal autocorrelation within
+a station and spatial (synoptic) dependence across the \NStations{}
+stations on a given day. A textbook Diebold--Mariano test
+\citep{diebold_1995_comparing_accuracy,diebold_2015_twenty_years} assumes one
+autocorrelated series and is not directly applicable to this panel structure;
+its small-sample behavior is separately unreliable even in the single-series
+case it was designed for \citep{coroneo_2020_small_samples}. We test two
+block definitions, aggregating the per-instance loss differential to one
+mean value per block before testing: a \emph{station block} (absorbing
+within-station temporal correlation, but not cross-station dependence) and
+a \emph{day block} (absorbing cross-station synoptic dependence on a given
+day, following the logic of exact tests under contemporaneous correlation,
+\citealp{luger_2004_exact_tests}, but not multi-day persistence in the loss
+differential itself). We do not additionally test a multi-day moving-block
+variant that would absorb such short-range temporal persistence; the day
+block already targets the specific mechanism this analysis was designed to
+address (same-day synoptic systems affecting many stations at once), and we
+report this as a remaining, open block-definition question rather than as a
+claim that day-blocking is fully sufficient. For each block definition we
+report a paired \(t\)-test and a Wilcoxon signed-rank test on the block
+means, and a block-bootstrap confidence interval on the CRPS skill score
+(resampling whole blocks with replacement). We call this a
+\emph{station-blocked} or \emph{day-blocked paired test}, not a
+Diebold--Mariano test: the classical test's assumptions do not transfer to
+this station~$\times$~time~$\times$~lead panel.
+
+\subsection{Breakpoint definition}
+\label{sec:breakpoint-def}
+
+The paper's central quantity is the training-data size at which a trained
+method's performance crosses a zero-shot reference's. We define \(N\) days
+of training as \(k = \mathrm{round}(N / \DaysPerCase)\) issue-date cases,
+\DaysPerCase{} being the reforecast archive's measured ratio of calendar
+days to sampled cases (Section~\ref{sec:data}). A breakpoint is
+the linearly interpolated case count \(k\) at which a trained method's
+metric crosses the zero-shot reference's value, computed over an ordered
+sequence of tested \(k\); we distinguish three outcomes explicitly rather
+than collapsing them into one ``no breakpoint'' label, which conflates
+opposite situations: \emph{a crossing at \(k=X\)} (reported with its
+calendar-day equivalent), \emph{already better at the smallest tested
+\(k\)} (no crossing needed because the trained method starts ahead), and
+\emph{no crossing within the tested range} (the trained method remains
+behind throughout every tested \(k\), which is a distinct and, for the
+zero-shot model's defense, more informative outcome than a numerical
+breakpoint would be).

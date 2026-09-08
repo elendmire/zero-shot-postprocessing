@@ -1,0 +1,488 @@
+\section{Discussion}
+\label{sec:discussion}
+
+\subsection{Why a few days is enough}
+\label{sec:discussion-fewdays}
+
+The paper's central practical result is that EMOS pooled crosses
+TimesFM-3's CRPS at \BpCrpsPooledCases{} cases (\BpCrpsPooledDays{}
+calendar days, Section~\ref{sec:results-breakpoint}) -- but that raw
+crossing is a point estimate, not yet a statistically defensible claim.
+Testing significance across the low-\(N\) range shows the earliest
+training size at which the advantage is significant under both a
+day-blocked \(t\)-test and a Wilcoxon test is \BpCrpsPooledSigK{} cases
+(\BpCrpsPooledSigDays{} days, Section~\ref{sec:results-significance}) --
+day-blocking being our primary block definition; the station-blocked
+\(t\)-test never reaches significance in the tested \(k=1\)--9 range,
+while the station-blocked Wilcoxon test does from
+\(k=\BpCrpsPooledStationWilcoxonFirstSigK{}\) onward, the same
+divergence already reported at \SigTestNCases{} cases now shown to
+persist throughout -- still a small absolute training size, and still
+well inside the regime
+\citet{baran_2016_combining} and \citet{gebetsberger_2018_estimation}
+already identify as usable for station-adaptive EMOS, and that the
+time-series and lead-time-continuous EMOS variants of
+\citet{jobst_2024_ts_emos} and \citet{wessel_2024_leadtime_continuous}
+target directly -- but nearly twice the raw crossing's calendar-day
+figure, not the same number. The practical implication for a newly
+commissioned station is direct, stated at the number the evidence
+actually supports: roughly \BpCrpsPooledSigDays{} days of paired data,
+not months, are enough to stop relying on a zero-shot foundation model's
+raw CRPS with statistical confidence; the raw crossing at
+\BpCrpsPooledDays{} days is the earliest the two methods' CRPS point
+estimates change order, not the earliest that difference is established
+rather than noise.
+
+This result is deliberately scoped to CRPS alone. Coverage tells a
+different story at substantially more data -- \CoverageCrpsRatioPooled{}x
+later for pooled EMOS, \CoverageCrpsRatioLocal{}x later for local EMOS
+(ratios from the unrounded breakpoint estimates, not the values as
+displayed; Section~\ref{sec:results-breakpoint}: \BpCoveragePooledCases{} cases
+pooled, \BpCoverageLocalCases{} cases locally), and interval width has no
+single crossing point at all -- EMOS pooled starts sharper than TimesFM-3
+and crosses to wider as it is given more data, while EMOS local stays
+sharper throughout the tested range (Section~\ref{sec:breakpoint-def}'s
+three-outcome distinction exists precisely so this kind of metric-specific
+divergence is reported as what it is, not flattened into one number). "A
+few days is enough" is therefore true for CRPS specifically, not for every
+metric this paper reports -- Sections~\ref{sec:discussion-trivial}
+and~\ref{sec:discussion-mechanism} address what CRPS alone does and does
+not establish about why.
+
+The question this paper asks -- how much training data a trained method
+needs to replace a zero-shot foundation model -- has a deployment-cost
+dimension this paper has not systematically measured: TimesFM-3 requires
+a GPU forward pass through a 330-million-parameter pretrained model for
+every inference call, while fitting EMOS end-to-end on the full training
+archive took \EmosPooledFitSeconds{}~s (pooled) or
+\EmosLocalFitSeconds{}~s (local) of CPU time in this study's own runs, and
+inference afterward is a closed-form Gaussian evaluation, not a further
+optimization. Once the training-data threshold in this paper is crossed,
+the practical choice is not a single-axis trade-off between accuracy and
+convenience: the trained method is both more accurate and cheaper to run.
+
+\subsection{Positioning against trivial baselines}
+\label{sec:discussion-trivial}
+
+Section~\ref{sec:results-full}'s full-data comparison (Table~\ref{tab:full-comparison})
+shows a result that splits by metric in a way worth stating plainly rather
+than softening: on CRPS, a one-parameter variance-inflation rescaling of
+the raw ensemble already beats TimesFM-3, and the fixed-climatological
+variant (b, \CrpsInflBFull{} K vs.\ TimesFM-3's \CrpsTsfmFull{} K) does so
+with no training data at all -- squarely the pattern
+\citet{zhang_2025_context_parroting} describes for trivial baselines
+against zero-shot foundation models generally, now confirmed in station
+postprocessing specifically. A comparable dynamic -- a pretrained model
+matching, but not decisively beating, a much simpler well-tuned
+alternative -- is reported in a different domain by
+\citet{molinaro_2026_universal_downscaling}.
+
+On the calibration-sharpness axis, the evidence points the other way,
+and this finding is now settled rather than conditional: the
+coverage-matched variant (c), its multiplier fit on training data alone
+(never on test-set coverage, Section~\ref{sec:methods}), needs
+\WidthInflCFull{} K to reach as close to TimesFM-3's own coverage as a
+training-fit multiplier allows -- substantially wider than TimesFM-3's
+\WidthTsfmFull{} K. Variant (c) is leakage-free by design, which means it
+is not an upper bound on what a trivial one-parameter rescaling could
+achieve at TimesFM-3's coverage target -- only a lower bound on how well
+a \emph{legitimately deployable} one can do. The leakage-optimistic
+counterpart -- a multiplier fit directly on the test set's own coverage,
+answering "what is the best any trivial rescaling could ever do here,
+even with an unfair advantage" -- needs \InflLeakyWidth{} K, still wider
+than TimesFM-3's \WidthTsfmFull{} K, at matched coverage: the leaky
+variant's root-finder converges to \InflLeakyCoverage{}, identical to
+TimesFM-3's \CoverageTsfmFull{} target to within floating-point
+precision, so the width comparison is not confounded by a residual
+coverage gap the way variant (c)'s is. This margin is not a bare point
+estimate: a day-blocked bootstrap on the per-instance width difference
+gives \InflLeakyWidthDiffPoint{} K (95\% CI
+[\InflLeakyWidthDiffCiLow{}, \InflLeakyWidthDiffCiHigh{}]) -- entirely
+positive, so the difference is statistically distinguishable from zero,
+not merely numerically positive on average. The interval is conditional
+on the leakage-optimistic multiplier fit once on the full test set, not
+re-fit within each bootstrap resample: it quantifies sampling variability
+in the width difference at that fixed multiplier, not variability in the
+multiplier itself. This margin is also not explained by EMOS's own
+training/test ensemble-size mismatch: subsampling the test side down to
+the training side's member count changes EMOS's own interval width by no
+more than \EnsSubsampleWidthDiffLocal{} K (Section~\ref{sec:limitations}),
+under one-tenth of this margin. TimesFM-3's
+calibration-sharpness advantage is therefore real: it survives even this
+unrealistically favorable trivial baseline, with uncertainty quantified
+(subject to that conditioning), so \citet{zhang_2025_context_parroting}'s
+critique, while correct on CRPS (above), does not extend to this axis.
+
+The honest summary of Section~\ref{sec:results-full} is: TimesFM-3 loses
+to a trivial rescaling on CRPS, unconditionally; it beats even a
+leakage-optimistic trivial rescaling on sharpness at matched coverage,
+so the calibration-sharpness advantage is not a leakage-free-vs.-leaky
+comparison artifact.
+
+\subsection{The short-lead advantage: information asymmetry or architecture}
+\label{sec:discussion-mechanism}
+
+\textbf{This section remains provisional; the architectural-advantage
+hypothesis has not been confirmed.} Section~\ref{sec:covariates}
+proposed a single mechanism for TimesFM-3's short-lead CRPS advantage
+(Section~\ref{sec:results-leadtime}: first sign flip at
+\FirstSignFlipHours{}~h, durable crossover at
+\DurableCrossoverHours{}~h): access to two channels EMOS and DRN were not
+given in this study's configuration (Table~\ref{tab:info-channels}) --
+the station's own recent observation history, and ensemble spread. These
+are two separate questions with two separate tests; one has now been
+run, with a limited, inconclusive result, and one is still outstanding.
+
+\textbf{Observation history (tested; does not support the
+information-asymmetry explanation, but does not settle the question
+either).} A persistence-augmented EMOS at 0--24~h tests whether adding
+the station's own last observation as a predictor closes the CRPS gap
+toward TimesFM-3. It does not, substantially: only
+\PersistenceGapClosedPct{}\% of the gap closes (persistence weight
+\PersistenceWeight{}, matched subset, \NPersistenceMatchedInstances{}
+instances), confirmed after ruling out lead-0 contamination as a
+confound (Section~\ref{sec:limitations}: exact-match and trend checks
+both clean). This result does not support the information-asymmetry
+explanation as stated -- the simplest way of giving EMOS the missing
+observation-history channel does not close the gap. It does not, on its
+own, establish that the advantage is architectural instead: the test has
+three real limitations that keep it from distinguishing the two
+hypotheses cleanly, not just describing them as a formality.
+
+\begin{itemize}
+\item \emph{Lead-pooled fit.} EMOS pools all \NLeadTimes{} lead times
+into one fit (Section~\ref{sec:methods-list}); the persistence term is
+fit once, lead-blind, inside that pooled model, while TimesFM-3's actual
+covariate and target information vary naturally with lead time. The two
+methods are not given the same structural opportunity to use
+lead-dependent information -- this is not an equal comparison.
+\item \emph{One linear term, one lag.} The persistence predictor is a
+single linear term on the single most recent observation. TimesFM-3
+receives a context window of 40 or more past observations, processed by
+a sequence model that can learn arbitrarily nonlinear, multi-lag
+structure. Adding one linear lag does not give EMOS "comparable
+information" to a 40-observation context in any meaningful sense --
+only a much smaller, cruder approximation to it.
+\item \emph{Metric-dependent.} In the same 0--24~h bucket, TimesFM-3
+wins on CRPS but EMOS is significantly \emph{closer to nominal coverage}
+(day-blocked \(t\): \(p=\LeadSigCoverageBucketShortDayT\), EMOS's favor,
+Section~\ref{sec:results-significance}). Whatever "architectural
+advantage" this test might support holds for CRPS specifically, not
+uniformly across every metric in the same lead-time bucket.
+\end{itemize}
+
+Given these three limitations, the honest reading of this test is
+narrower than "architecture, not information asymmetry": it shows that
+the simplest information-asymmetry fix is insufficient, not that
+architecture is confirmed as the explanation. A test able to distinguish
+the two hypotheses would need a lead-resolved EMOS fit (not pooled) with
+a multi-lag persistence predictor (not one linear term on one lag) --
+this paper does not run that test, and does not claim the weaker test
+run here settles the question.
+
+\textbf{Ensemble spread / calibration (resolved: does not support the
+asymmetry framing).} The other half of the proposed asymmetry -- that
+TimesFM-3's calibration deficit relative to EMOS reflects a missing
+spread channel, not an architectural limit -- has now been tested
+directly. The model's covariate channel does accept spread as a second,
+simultaneous input, and the model is genuinely sensitive to that
+channel's real informational content, not merely its presence (a
+preliminary test confirms both, Section~\ref{sec:covariates},
+Section~\ref{sec:limitations}), but supplying it this way did not close
+the calibration deficit: CRPS and interval width both worsen, and
+coverage moves only marginally closer to nominal at a substantially
+wider interval (Section~\ref{sec:discussion-covariate-check} reports the
+full result). This does not confirm the asymmetry framing for this half
+of the mechanism question, and the observation-history result above does
+not settle it either: the two channels test genuinely different things,
+and a finding for one is not evidence for the other.
+
+\subsection{The two-covariate evaluation: does spread change calibration?}
+\label{sec:discussion-covariate-check}
+
+Section~\ref{sec:covariates}'s preliminary test (T1) established that
+TimesFM-3's covariate channel accepts ensemble spread as a second,
+simultaneous input alongside the ensemble mean, and that the model's
+output is genuinely sensitive to that channel's real informational
+content. This section reports the full-scale evaluation that
+preliminary result motivated: supplying both the ensemble mean and
+ensemble spread as simultaneous past-future covariates, on the same
+\NMatchedInstances{} matched instances used for every other TimesFM-3
+number in this paper, and comparing the result against the mean-only
+configuration used everywhere else.
+
+Supplying spread did not improve TimesFM-3's CRPS: it worsens from
+\CrpsTsfmFull{} K to \CrpsTsfmTwoCov{} K, a net negative of
+\CrpsTwoCovDiff{} K. No uncertainty interval has been computed for this
+difference; its magnitude is comparable to the ensemble-size sensitivity
+measured directly in Section~\ref{sec:limitations}
+(\EnsSubsampleCrpsDiffPooled{}--\EnsSubsampleCrpsDiffLocal{} K), so it
+should be read as a real but not dramatically large effect, not a
+precisely bounded one. Coverage moves closer to the 0.80-nominal target,
+from \CoverageTsfmFull{} to \CoverageTsfmTwoCov{}: in practice, the
+two-covariate configuration is calibrated at this target, where the
+mean-only configuration under-covers. Interval width also increases,
+from \WidthTsfmFull{} K to \WidthTsfmTwoCov{} K (\WidthTwoCovDiff{} K
+wider) -- but by this paper's own standard of judging sharpness jointly
+with calibration (Section~\ref{sec:methods},
+\citealp{gneiting_2007_calibration_sharpness}), these two widths are not
+directly comparable on the same axis: they are measured at different
+coverage levels, and a wider interval is the expected cost of a
+configuration that is closer to properly calibrated, not on its own
+evidence of a worse model. This reading has independent support: fitting
+the leakage-optimistic multiplier (Section~\ref{sec:discussion-trivial})
+at this same \CoverageTsfmTwoCov{} target, rather than TimesFM-3's
+original \CoverageTsfmFull{}, still needs \LeakyWidthAtTwoCovCoverage{}
+K -- \LeakyWidthAtTwoCovCoverageDiff{} K wider than the two-covariate
+configuration's own \WidthTsfmTwoCov{} K at the identical coverage.
+Finding 2's width advantage therefore holds at two independent coverage
+points, not only at TimesFM-3's original one.
+
+Supplying ensemble spread as a second covariate therefore worsens
+TimesFM-3's CRPS and moves it along the calibration-sharpness trade-off
+-- closer to nominal coverage, at a wider interval -- rather than
+cleanly closing the calibration deficit: this is a shift along that
+trade-off, not a clean improvement or a clean failure. This result does
+not confirm the information-asymmetry framing for the calibration half
+of the mechanism question (Section~\ref{sec:covariates}): TimesFM-3 was
+not simply prevented by an input-design choice from recovering EMOS-like
+calibration once that choice was corrected. But it does not confirm
+architecture as the explanation instead, either: the model accepted the
+second input and was demonstrably sensitive to it
+(Section~\ref{sec:limitations}), and did shift its output along the
+calibration-sharpness trade-off when given it -- it just did not convert
+that shift into a net improvement on CRPS, or into a clean win on the
+paper's joint sharpness-calibration standard, within this study's
+zero-shot, frozen-weights setup. Whether a fine-tuned or differently
+prompted configuration would do better remains untested and outside this
+paper's scope; so does whether a different input scale or normalization
+convention for the spread channel would change this result
+(Section~\ref{sec:limitations}).
+
+\subsection{Implementation pitfall: covariate wiring}
+\label{sec:pitfall}
+
+\citet{kreusel_2026_covariates_key} reports that covariate handling, not
+architecture or scale, is the dominant factor in time series foundation
+model performance on real tasks. This project's own development history is
+a direct, first-hand instance of that finding rather than a citation of
+it: an earlier version of TimesFM-3's covariate pipeline
+(Section~\ref{sec:covariates}) supplied an incoherent covariate channel --
+one that ran without error and produced plausible-looking quantile output
+-- and measurably degraded TimesFM-3's apparent skill before the bug was
+found and corrected. The pipeline did not crash; it silently produced a
+worse model. The practical warning for anyone implementing a
+covariate-aware time series foundation model pipeline is that "it runs and
+returns sensible-looking numbers" is not evidence the covariate is wired
+correctly -- only a dedicated correctness check on the covariate channel
+itself (not just on the model's output shape or its overall CRPS) would
+have caught this before it silently degraded results. This experience is
+the direct reason this project later required a distinguishing
+correctness check -- not just "does the call succeed," but "is the
+output genuinely sensitive to this covariate's real informational
+content, not merely its presence" -- before trusting any further
+covariate-channel change (Section~\ref{sec:discussion-covariate-check}'s
+ablation test is that check, run precisely because of the lesson learned
+here).
+
+\subsection{The value of seasonal coverage in small training sets}
+\label{sec:discussion-seasonal}
+
+Section~\ref{sec:data}'s two sampling arms answer different questions by
+construction: the contiguous arm's small-\(k\) subsets see less seasonal
+variety than a full archive would, while the random arm's uniform draw
+gives artificial full-season coverage even at small \(k\). At
+\SeasonalCompareNDays{} days, EMOS pooled's coverage is already visibly
+different between the two arms -- \CoverageRandomSeasonalN{} under the
+random arm against \CoverageContigSeasonalN{} under the contiguous arm --
+while CRPS is nearly identical (\CrpsRandomSeasonalN{} K vs.\
+\CrpsContigSeasonalN{} K). This is consistent with
+Section~\ref{sec:discussion-fewdays}'s CRPS-crosses-fast,
+coverage-crosses-slow pattern having a seasonal-coverage component: a
+model can already predict the mean well from a handful of contiguous days,
+but calibrating the predictive interval correctly needs to have seen a
+representative spread of conditions, not just recent ones. Operationally,
+this means the realistic deployment scenario -- a newly commissioned
+station with only contiguous recent history, the contiguous arm's premise
+-- reaches good CRPS quickly but should not be assumed to be well
+calibrated at the same training size a full-season random sample would be.
+\citet{baran_2026_sharpness_penalty} targets the same sharpness axis on
+the same benchmark; the overlap is in the axis studied, not in this
+specific contiguous-vs-random comparison, which does not appear in that
+work.
+
+\subsection{Limitations}
+\label{sec:limitations}
+
+\textbf{Covariate channel design; tested, but does not resolve the
+mechanism question.} TimesFM-3's covariate channel was given only the
+ensemble mean in this study's main comparison
+(Section~\ref{sec:covariates}); whether supplying ensemble spread too
+would change calibration was tested directly
+(Section~\ref{sec:discussion-covariate-check}). The channel does accept
+a second, simultaneous input, and the model is genuinely sensitive to
+its real informational content, not merely its presence -- but CRPS
+worsens when spread is supplied this way, and while coverage moves
+closer to nominal (a genuine calibration shift, not merely a wider
+interval for its own sake), the interval widens substantially to get
+there, so the net result is a shift along the calibration-sharpness
+trade-off, not a clean win (Section~\ref{sec:discussion-covariate-check}).
+This result does not confirm the information-asymmetry framing (spread
+was not simply withheld from a channel that would otherwise have used it
+straightforwardly beneficially), but it does not confirm architecture as
+the explanation either: the channel accepted the input and the model was
+demonstrably sensitive to it, and did shift its behavior in response to
+it, without that shift converting into a net improvement. Whether a
+fine-tuned or differently prompted configuration would use spread more
+successfully is untested and outside this paper's scope. We report this
+as an unresolved mechanism question rather than resolving it either way
+beyond what this evidence supports.
+
+\textbf{Spread channel scale and normalization.} Ensemble spread was
+supplied to TimesFM-3's second covariate channel as a standard
+deviation, in the same physical units (Kelvin) as the ensemble mean but
+roughly two orders of magnitude smaller in raw value (typically 1--3~K
+vs.\ 270--290~K) -- a real scale disparity between the two channels as
+supplied. This is not, on its own, an unaddressed confound: TimesFM-3's
+own preprocessing z-normalizes each covariate channel independently,
+computing a running mean and standard deviation per channel rather than
+sharing statistics across channels (confirmed directly from the
+installed \texttt{timesfm3} package's source, not inferred), so the raw
+magnitude difference between the mean and spread channels does not by
+itself explain why supplying spread failed to improve performance. The
+spread channel was supplied at a single scale and as a single channel,
+per-channel normalization is confirmed rather than merely assumed, and
+the result above should be read as "this specific input design does not
+help," not as "TimesFM-3 cannot use ensemble spread" more broadly --
+untested alternatives include a differently transformed spread channel
+(e.g.\ log-spread) or a channel expressing spread relative to the mean.
+
+\textbf{Lead-time pooling.} EMOS and DRN each fit a single parameter set
+pooled across all \NLeadTimes{} lead times (Section~\ref{sec:methods-list}),
+while TimesFM-3 and the raw ensemble vary naturally by lead time. A
+lead-blind fit is necessarily too wide at short lead (where true
+uncertainty is small) and too narrow at long lead (where it is large)
+relative to a lead-time-aware fit, which means the CRPS crossings reported
+in Section~\ref{sec:results-breakpoint} are, if anything, understated for
+EMOS and DRN, not artifacts of this pooling. It is a genuine limitation
+for the sharpness comparison specifically, since a lead-blind interval's
+width behavior is not directly comparable to TimesFM-3's per-lead-varying
+output. For DRN in particular, this feature-constrained setup is not the
+architecture's originally-intended one (\citealp{rasp_2018_drn} additionally
+use auxiliary NWP fields and lead time as inputs): where DRN underperforms
+in this paper, the correct reading is that this architecture, under this
+feature-constrained setup, was outperformed -- not that the architecture
+itself is weak.
+
+\textbf{Persistence test run on a lead-pooled EMOS fit.} The
+persistence-augmented EMOS test (Section~\ref{sec:discussion-mechanism})
+inherits this same lead-pooling limitation directly: the persistence
+predictor is fit once, lead-blind, inside a model already disadvantaged
+by pooling across all 21 lead times against a naturally lead-varying
+TimesFM-3. This reduces the test's power to distinguish an
+information-asymmetry explanation from an architectural one -- a
+lead-resolved EMOS fit with a multi-lag persistence predictor would be a
+meaningfully stronger test, and this paper does not run one.
+
+\textbf{Target-variable specificity.} The breakpoint measured here is
+for \(2\,\mathrm{m}\) temperature, where EMOS's Gaussian predictive
+family is close to ideally specified. For targets requiring non-Gaussian
+or target-specific reformulations (Section~\ref{sec:intro}: e.g.\
+\citealp{scheuerer_2013_precip_emos}'s precipitation-specific EMOS), the
+trained method's small-sample advantage would not necessarily appear as
+early.
+
+\textbf{Tail truncation in twCRPS.} The tail-weighted CRPS defined in
+Section~\ref{sec:metrics} uses the upper two levels of a fixed
+\NQuantileLevels{}-level quantile grid (0.8, 0.9) as its tail weighting.
+This tests the upper end of the quantile grid this study fixed for every
+method, not whether TimesFM-3 genuinely lacks tail behavior beyond p90 --
+the grid itself has no quantile levels past 0.9 for any method, so no
+comparison in this paper can distinguish "no tail" from "a tail this
+grid cannot see."
+
+\textbf{PIT diagnostics are descriptive only.}
+\citet{broecker_2018_serial_dependence} and
+\citet{broecker_2020_stratified_rank} show that formal rank-uniformity
+hypothesis tests require correction for serial dependence, which this
+study's PIT values genuinely exhibit (station~$\times$~time~$\times$~lead
+panel structure, Section~\ref{sec:significance}); no such test is applied
+to the PIT histograms in Section~\ref{sec:results-sharpness}, which are
+read descriptively for this reason.
+\citet{dirkson_2025_misdiagnosing_reliability} further shows that coverage
+and rank-based reliability diagnostics can both be misled by the same
+covariance pathology -- we do not claim the descriptive PIT reporting in
+this paper is immune to that critique; it is a genuine, unresolved
+limitation, not one worked around by reporting PIT histograms instead of
+a formal test.
+
+\textbf{Random-arm seed count.} The random sampling arm's mean and
+standard deviation (Section~\ref{sec:data}) are estimated from
+\DataSizeSweepSeeds{} seeds. This is enough to see the arm's qualitative
+pattern relative to the contiguous arm, but the standard deviation itself
+is estimated noisily from so few draws -- it should be read as an
+indicator of spread, not a precise quantity, and Figure~\ref{fig:f1}'s
+random-arm error bars inherit this same noise.
+
+\textbf{Ensemble size mismatch.} EMOS's training-side ensemble variance is
+estimated from \TrainEnsembleMembers{} members against
+\TestEnsembleMembers{} on the test side (Section~\ref{sec:data}); an
+11-member variance estimate is intrinsically noisier than a 51-member one
+of the same true spread, so EMOS is trained against a noisier variance
+estimate than the one used to evaluate it. This is no longer an
+unbounded concern: subsampling 11 of the test side's 51 members (10
+draws, recomputing the ensemble mean/variance from just those 11 and
+re-evaluating the already-fitted full-\(N\) EMOS models) changes pooled
+EMOS's own CRPS by \EnsSubsampleCrpsDiffPooled{} K, its interval width by
+\EnsSubsampleWidthDiffPooled{} K, and its coverage@80\% by
+\EnsSubsampleCoverageDiffPooled{} (local EMOS: \EnsSubsampleCrpsDiffLocal{} K,
+\EnsSubsampleWidthDiffLocal{} K, \EnsSubsampleCoverageDiffLocal{}
+respectively) -- both width differences are under one-tenth of
+Section~\ref{sec:discussion-trivial}'s \InflLeakyWidthDiffPoint{} K
+leakage-optimistic-width margin. The ensemble-size mismatch is real and
+measurable, but it is too small to be a material contributor to that
+finding.
+
+\textbf{Unverified chronological assumption.} The contiguous sampling
+arm orders cases by descending \((\mathrm{year\_idx}, \mathrm{time\_idx})\),
+assuming ascending \(\mathrm{year\_idx}\) is chronologically more recent
+(Section~\ref{sec:data}). Only \(\mathrm{time\_idx}\)'s ordering was
+independently verified against real decoded dates; \(\mathrm{year\_idx}\)'s
+polarity was not. This bounds its impact to training sizes beyond the
+209-date single-cycle boundary (\(k>209\), i.e.\ N greater than roughly
+728 calendar days) -- below that boundary, every contiguous-arm result in
+this paper is unaffected regardless of which polarity is correct.
+
+\textbf{Training-data contamination risk.} This study does not verify that
+TimesFM-3's pretraining corpus excludes the 2017--2018 test period used
+here. Data contamination in time series foundation model evaluation is an
+active, documented concern
+(\citealp{li_2026_tsfmaudit,chiazagomekpere_2026_leakage_aware,balloccu_2024_leak_cheat_repeat}),
+and benchmark-methodology work
+(\citealp{aksu_2024_gift_eval,meyer_2025_rethinking_eval}) argues evaluation
+protocols in this area have not caught up with the risk. We cannot rule
+this out for TimesFM-3 on EUPPBench; a demonstrated case of the same risk
+materializing in a different domain is given by
+\citet{pan_2026_contamination_electricity}. If TimesFM-3's apparent
+zero-shot skill benefits from contamination, its true zero-shot CRPS would
+be worse than reported here, which would only strengthen this paper's
+conclusion that trained methods overtake it quickly -- it does not
+threaten the paper's central claim, but it is a real, unaddressed
+limitation of the TimesFM-3 numbers taken in isolation.
+
+\textbf{Lead-0 contamination, checked and ruled out.}
+Section~\ref{sec:discussion-mechanism} depends on the 0--24~h bucket,
+which includes \(\mathrm{step\_hours}=0\) -- the analysis time, where the
+"forecast" could in principle be tightly coupled to the observation it
+is verified against for every method, not only TimesFM-3. Two checks
+rule this out: the exact-match fraction between the ensemble-mean
+forecast and the observation at lead 0 is \LeadZeroExactMatchFraction{}
+(no higher than the \LeadZeroMaxOtherExactMatchFraction{} seen at any other
+lead, both consistent with floating-point noise, not literal copying);
+and lead 0's residual standard deviation (\LeadZeroActualStd{} K) is in
+line with what a linear trend fit to leads \(\geq 6\)~h predicts at
+\(\mathrm{step\_hours}=0\) (\LeadZeroPredictedStd{} K, ratio
+\LeadZeroStdRatio{}) -- if anything very slightly above the trend, not a
+discontinuous tightening below it. Every lead-time-resolved result in
+this paper that includes lead 0 (Section~\ref{sec:results-leadtime}) can
+be read without this particular caveat.

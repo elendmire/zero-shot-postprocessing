@@ -1,0 +1,139 @@
+\section{Introduction}
+\label{sec:intro}
+
+Numerical weather prediction (NWP) output is systematically biased at any
+single station or grid point: model resolution, physical
+parameterizations, and terrain representation err in a station-specific
+and often persistent way, and statistical postprocessing exists
+specifically to correct this systematic component rather than relying on
+raw ensemble output directly \citep{vannitsem_2020_postprocessing_review,gneiting_2005_emos}.
+Beyond Ensemble Model Output Statistics (EMOS)'s original Gaussian
+regression \citep{gneiting_2005_emos}, the field has extended
+postprocessing along several axes: mixture and non-Gaussian predictive
+families \citep{baran_2015_mixture_emos}, target-specific reformulations
+for variables EMOS's Gaussian assumption fits poorly
+\citep{scheuerer_2013_precip_emos}, explicit calibration-enforcing
+extensions \citep{wilks_2018_enforcing_calibration}, and
+permutation-invariant neural architectures that treat ensemble members as
+an unordered set \citep{hoehlein_2023_permutation_invariant}. The
+Distributional Regression Network (DRN, \citealp{rasp_2018_drn}) is this
+paper's own neural baseline (Section~\ref{sec:methods}).
+
+Every one of these methods shares the same requirement: a multi-year
+archive of paired ensemble/observation history at the specific station
+being corrected. \citet{vannitsem_2020_postprocessing_review}'s review of
+the field flags this as a structural limitation, not an incidental one --
+and it is exactly what a newly commissioned station, a station following
+an NWP model version upgrade that breaks the archive's stationarity, or a
+station in a sparsely observed region cannot supply. Trained
+postprocessing's accuracy gains, in other words, come with an entry cost
+that a purely zero-shot alternative would not.
+
+Time series foundation models (TSFMs) -- large, pretrained sequence models
+applied without any task-specific training or parameter updates on the
+target series -- offer a structurally different answer: no
+station-specific training archive at all. This is a different proposition
+from the spatial, full-field AI weather-prediction models that have
+separately transformed NWP itself
+\citep{lam_2023_graphcast,price_2024_gencast,bodnar_2025_aurora}: those
+models replace the numerical forecast; a TSFM used for postprocessing
+takes an existing ensemble forecast as input and corrects it at the
+station level, one series at a time, with no spatial field anywhere in its
+architecture. TimesFM-3 -- the 3.0 release of Das et al.'s decoder-only
+TimesFM architecture \citep{das_2024_timesfm_icml} -- is one such model, and
+its past-future covariate support (a version-specific capability sourced
+directly in Section~\ref{sec:covariates}, not part of the original
+architecture paper) is the specific capability this paper exploits: the
+ensemble forecast can be supplied as a covariate known across the entire
+forecast horizon, not just in the past, letting a zero-shot model use NWP
+guidance the way a postprocessing method would, without training on this
+benchmark's data at all.
+
+To our knowledge, no existing work directly measures the training-data
+size at which a station's own trained postprocessing model overtakes a
+zero-shot time series foundation model given the same NWP guidance -- the
+question this paper answers. On the identical EUPPBench benchmark this
+paper uses, \citet{vanpoecke_2024_transformer},
+\citet{mlakar_2023_spline_flows}, and \citet{landry_2025_fmap} each
+propose a trained neural or flow-based postprocessing architecture, and
+\citet{allen_2023_multivariate_calibration} evaluates multivariate
+calibration on it -- none compares against a zero-shot foundation model.
+\citet{baran_2026_sharpness_penalty} studies the same sharpness axis this
+paper's calibration-sharpness result depends on, on the same benchmark,
+but not the zero-shot-vs-trained breakpoint question.
+\citet{sun_2026_streamflow_zeroshot} pose a structurally identical
+question -- is a zero-shot time series foundation model competitive with
+domain-trained methods -- in hydrology, not weather postprocessing;
+\citet{bharadwaj_2026_air_quality_arena} benchmark TSFM zero-shot skill
+across regions in air quality forecasting, a related but distinct target
+variable and evaluation design. \citet{wessel_2024_leadtime_continuous}
+and \citet{muschinski_2023_mos_random_forests} are the closest
+small-training-data postprocessing rivals to this paper's own breakpoint
+curve, targeting the same low-data regime with different
+(lead-time-continuous, random-forest) trained architectures rather than a
+zero-shot comparison. None of these measures where the crossing point
+actually is.
+
+This paper's contribution is threefold. (1) At full training data, every
+trained method (EMOS pooled, EMOS local, DRN) beats TimesFM-3's
+Continuous Ranked Probability Score (CRPS, Section~\ref{sec:results-full}).
+A one-parameter variance-inflation
+rescaling of the raw ensemble does too: a fixed-climatological variant
+beats it with no training data at all, and the CRPS-optimal variant beats
+it at every training size we tested it at, from \InflASmallestNDays{}
+days upward (Section~\ref{sec:results-full}) -- on CRPS, the answer to
+this paper's central question is negative for TimesFM-3, and not
+narrowly so. This advantage starts at very small training sizes: pooled
+EMOS's CRPS crosses TimesFM-3's at \BpCrpsPooledCases{} cases
+(\BpCrpsPooledDays{} calendar days, Section~\ref{sec:results-breakpoint}),
+but that raw crossing is not itself statistically significant; the
+advantage is significant from \BpCrpsPooledSigK{} cases
+(\BpCrpsPooledSigDays{} calendar days) onward under day-blocking, our
+primary block definition, for both EMOS pooled and EMOS local alike --
+the station-blocked \(t\)-test does not reach significance anywhere in
+the tested \(k=1\)--9 range, while the station-blocked Wilcoxon test does
+from \(k=\BpCrpsPooledStationWilcoxonFirstSigK{}\) onward, the same
+test-statistic divergence already reported at \SigTestNCases{} cases
+(Section~\ref{sec:results-significance}), now shown to persist across the
+whole low-\(k\) range. Coverage crosses more slowly
+(ratios computed from the unrounded breakpoint estimates, not the
+values as displayed): pooled EMOS's coverage crosses TimesFM-3's roughly
+\CoverageCrpsRatioPooled{}x later than its CRPS does (\BpCoveragePooledCases{}
+cases / \BpCoveragePooledDays{} days), and local EMOS's about
+\CoverageCrpsRatioLocal{}x later (\BpCoverageLocalCases{} cases /
+\BpCoverageLocalDays{} days) -- so "a few days is enough" holds for CRPS
+specifically, not for calibration. These comparisons are between methods
+given different information: TimesFM-3's covariate channel received the
+ensemble mean but not ensemble spread in this study, while EMOS and DRN
+received spread but no observation history (Section~\ref{sec:covariates},
+Table~\ref{tab:info-channels}); supplying spread as a second covariate
+does not close this calibration-sharpness gap either
+(Section~\ref{sec:discussion-covariate-check}). (2) On the
+calibration-sharpness axis, TimesFM-3 holds a real advantage over a
+trivial rescaling: even a leakage-optimistic multiplier fit directly on
+test-set coverage -- an upper bound no legitimately deployable trivial
+rescaling could exceed -- needs \InflLeakyWidth{} K, still wider than
+TimesFM-3's \WidthTsfmFull{} K (Section~\ref{sec:discussion-trivial}).
+(3) TimesFM-3's short-lead CRPS advantage first
+flips sign at \FirstSignFlipHours{}~h and reverses durably by
+\DurableCrossoverHours{}~h (Section~\ref{sec:results-leadtime}); the
+mechanism behind that advantage has two independent parts. The
+observation-history part was tested directly and does not support an
+information-asymmetry explanation -- a persistence-augmented EMOS
+closes only \PersistenceGapClosedPct{}\% of the gap -- but the test
+itself cannot cleanly distinguish an information-set explanation from an
+architectural one (Section~\ref{sec:discussion-mechanism}). The
+ensemble-spread/calibration part was also tested directly, by supplying
+TimesFM-3 with ensemble spread as a second covariate: it worsens CRPS
+and shifts the model along the calibration-sharpness trade-off without
+closing the calibration deficit, even though the channel demonstrably
+accepts and uses the input (Section~\ref{sec:discussion-covariate-check}).
+Together these results argue that a frozen, zero-shot time series
+foundation model is, for this task, mostly not competitive with a few
+days of station-specific training data on CRPS -- with one genuine
+exception that survives even a leakage-optimistic trivial baseline (the
+calibration-sharpness axis), and a short-lead advantage that the
+information-asymmetry explanation does not account for. The evidence
+presented here is for one
+time series foundation model, TimesFM-3; whether it generalizes to other
+pretrained time series models (e.g.\ Chronos-2, Moirai-2) is untested.

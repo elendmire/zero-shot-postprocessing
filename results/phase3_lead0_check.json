@@ -1,0 +1,17 @@
+{
+  "model_version": "phase3-lead0-check-v1",
+  "config": {
+    "exact_match_atol": 1e-06,
+    "trend_fit_leads": "step_hours >= 6",
+    "lead0_exact_match_fraction": 0.0,
+    "max_other_exact_match_fraction": 2.8070963395463733e-05,
+    "predicted_std_at_lead0_from_trend": 1.7386551345634718,
+    "actual_std_at_lead0": 1.7643795901805215,
+    "actual_over_predicted_ratio": 1.0147956055836849
+  },
+  "config_hash": "8bffaad4e11b84f6",
+  "git_sha": "b1134f947ca49ea64af761f48a56fdd2385ba83a",
+  "git_dirty": true,
+  "source_tree_sha256": "20a4aad7cd4c3a10e94fbe28e1f9d522a48a3b0c31b80eb39092bf4e00431e97",
+  "written_at": "2026-09-07T17:12:00.160361+00:00"
+}

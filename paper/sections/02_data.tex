@@ -1,0 +1,94 @@
+\section{Data and experimental design}
+\label{sec:data}
+
+We use the EUPPBench postprocessing benchmark, version~\EuppbenchVersion{}
+\citep{demaeyer_2023_euppbench}, restricted to its German subset of
+\NStations{} stations and the \(2\,\mathrm{m}\) temperature target. EUPPBench
+defines its own train/test split, which we never re-partition: training
+uses ECMWF reforecasts issued \TrainYearRange{} with
+\TrainEnsembleMembers{} ensemble members, and testing uses operational
+ECMWF forecasts issued \TestYearRange{} with \TestEnsembleMembers{}
+members. Both sides carry \NLeadTimes{} lead times from 0 to
+\MaxLeadHours{}~h in \LeadStepHours{}-hour steps. Reference-quality
+observations are DWD station measurements; the ensemble side is ECMWF's
+operational and reforecast archives as distributed through EUPPBench.
+EUPPBench also defines a wind-speed target (\(w10\)); we defer it here
+because no country in the benchmark provides a direct wind-speed
+observation series, only wind gust, and substituting gust for speed would
+change what is being verified.
+
+TimesFM-3's fixed context-window requirement (at least 40 prior
+observations) excludes some station/lead/issue-time combinations that would
+otherwise be evaluable by the other methods, so every comparison in this
+paper is computed on the intersection of instances all methods can produce
+a prediction for, not each method's own largest possible set. The full test
+set otherwise available to EMOS and the raw ensemble contains 748{,}099
+instances; requiring TimesFM-3's context window reduces this to
+\NMatchedInstances{} matched instances, and every result in this paper is
+computed on that matched set for every method, including EMOS and the raw
+ensemble, not their own larger native set.
+
+The archive's raw station dimension carries 51 station identifiers; two are
+excluded throughout this study because their observation series contain
+missing values that would otherwise propagate NaNs into every downstream
+metric, leaving the \NStations{} stations used everywhere in this paper.
+Ensemble summary statistics (mean and variance) are computed once from the
+raw per-member forecasts before any postprocessing method sees them, using
+an unbiased (\(\mathrm{ddof}=1\)) variance estimator on both the training
+and test sides so that EMOS is never trained against a systematically
+different variance definition than the one it is evaluated against. The
+training-side ensemble variance is nonetheless estimated from
+\TrainEnsembleMembers{} members against \TestEnsembleMembers{} on the test
+side; an 11-member variance estimate is intrinsically noisier than a
+51-member one of the same true spread, so EMOS is trained against a
+noisier estimate of ensemble variance than the one used to evaluate it
+(Section~\ref{sec:limitations}).
+
+The paper's central axis is training-data size, expressed as a number of
+training \emph{cases} \(k\) rather than calendar days directly, since the
+reforecast archive samples a fixed, non-daily grid of issue dates rather
+than every calendar day. The reforecast archive's raw \texttt{time} coordinate cannot be reliably
+decoded to calendar dates: attempting to decode it raises an
+\texttt{OverflowError}, confirmed to be caused by an unmasked fill-value
+sentinel surviving into the time-unit conversion, not by a transient
+network fault, since the same failure text was independently confirmed on
+the sibling reforecast-observations file. We therefore treat each issue
+date as an abstract
+\((\mathrm{year\_idx}, \mathrm{time\_idx})\) pair rather than a decoded
+calendar date: \ReforecastTotalIssueDates{} representative issue-date
+positions (\(\mathrm{time\_idx}\)) recur once per analog year
+(\(\mathrm{year\_idx}\), 20 analog years in total), so the full archive
+contains \FullArchiveCases{} cases (\(\ReforecastTotalIssueDates \times
+20\)). We measured the calendar-day span of one such 209-date cycle
+directly from its real, decodable date labels: it spans
+\ReforecastIssueDateSpanDays{} calendar days --
+consistent with a twice-weekly issue cadence over two calendar years, not
+one -- giving \(\DaysPerCase\) calendar days per case. We convert a
+requested training size of \(N\) days to \(k = \mathrm{round}(N /
+\DaysPerCase)\) cases throughout, and report both units together wherever
+a training size is cited, since case count and calendar-day equivalent are
+not interchangeable at this archive's actual sampling density. The
+contiguous training arm (below) orders cases by descending
+\((\mathrm{year\_idx}, \mathrm{time\_idx})\), assuming ascending
+\(\mathrm{year\_idx}\) is chronologically more recent; only
+\(\mathrm{time\_idx}\)'s ordering was independently verified against real
+decoded dates, so this assumption is disclosed, not confirmed
+(Section~\ref{sec:limitations} bounds its limited practical impact).
+
+We test two ways of selecting which \(k\) cases make up a given training
+size, since they answer different questions. The \emph{contiguous} arm
+(primary) takes the \(k\) cases closest in time to the test period,
+working backward -- the realistic scenario for a newly deployed station
+whose limited history is chronologically contiguous, so small \(k\) sees
+substantially less seasonal variety than a full archive would. The
+\emph{random} arm (secondary, \DataSizeSweepSeeds{} seeds, mean and
+standard deviation reported) draws \(k\) cases uniformly at random from
+the full archive, giving artificial full-season coverage even at small
+\(k\). The gap between the two arms' results is itself a reported finding
+about the operational value of seasonal training coverage
+(Section~\ref{sec:results}), not a discrepancy to be resolved in favor of
+one arm. \citet{baran_2026_sharpness_penalty} targets the same sharpness
+axis on the same benchmark; we discuss the relationship to our own
+sharpness results directly in Section~\ref{sec:discussion} rather than
+here. Other EUPPBench applications are surveyed in
+Section~\ref{sec:intro}.

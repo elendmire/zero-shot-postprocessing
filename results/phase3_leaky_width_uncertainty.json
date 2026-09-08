@@ -1,0 +1,13 @@
+{
+  "model_version": "phase3-leaky-width-uncertainty-v1",
+  "config": {
+    "seed": 0,
+    "n_boot": 2000,
+    "target_coverage": 0.76032821502584
+  },
+  "config_hash": "ca084ae46288f092",
+  "git_sha": "b1134f947ca49ea64af761f48a56fdd2385ba83a",
+  "git_dirty": true,
+  "source_tree_sha256": "fea9914385835cf2da724d2f4752767bf22684a0a82f68c13c1163a165e8c64c",
+  "written_at": "2026-09-07T19:11:51.594201+00:00"
+}

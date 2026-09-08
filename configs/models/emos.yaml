@@ -1,0 +1,5 @@
+# configs/models/emos.yaml
+name: emos
+group: classic
+fit_method: crps_minimization
+# BLOCKED: hyperparameters TBD once real EUPPBench data shape is known.

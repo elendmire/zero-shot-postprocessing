@@ -1,0 +1,109 @@
+\section{Conclusion}
+\label{sec:conclusion}
+
+At full training data, every trained method -- EMOS pooled, EMOS local,
+and DRN -- beats TimesFM-3's CRPS, and a one-parameter variance-inflation
+rescaling of the raw ensemble does too, with a fixed-climatological
+variant achieving this using no training data at all
+(Section~\ref{sec:results-full}). This advantage appears at very small
+training sizes: EMOS pooled's raw CRPS crossing is at
+\BpCrpsPooledCases{} cases (\BpCrpsPooledDays{} calendar days), and that
+crossing becomes statistically significant, under day-blocking (our
+primary block definition), from \BpCrpsPooledSigK{} cases
+(\BpCrpsPooledSigDays{} days) onward for both EMOS variants -- the
+station-blocked \(t\)-test does not reach significance anywhere in the
+tested \(k=1\)--9 range, while the station-blocked Wilcoxon test does
+from \(k=\BpCrpsPooledStationWilcoxonFirstSigK{}\) onward
+(Section~\ref{sec:results-significance}). For a newly commissioned
+station, this is the practical answer to this paper's title question on
+CRPS: roughly \BpCrpsPooledSigDays{} days of paired ensemble/observation
+history, not months, are enough to reach a statistically defensible CRPS
+advantage over a frozen, zero-shot foundation model, and does so at a
+lower inference cost too, on the qualitative comparison in
+Section~\ref{sec:discussion-fewdays} (a real, measured EMOS fit time
+against an unmeasured but qualitatively larger GPU inference cost for
+TimesFM-3, not a quantified comparison on both sides). Coverage crosses
+far more slowly
+than CRPS -- \CoverageCrpsRatioPooled{}x later for pooled EMOS,
+\CoverageCrpsRatioLocal{}x later for local EMOS -- so this practical
+answer holds for CRPS specifically, not for calibration.
+
+On the calibration-sharpness axis, TimesFM-3 holds a real advantage over
+a trivial rescaling, and this is settled, not conditional: even a
+leakage-optimistic multiplier fit directly on test-set coverage -- an
+upper bound no legitimately deployable trivial rescaling could exceed --
+needs \InflLeakyWidth{} K, still wider than TimesFM-3's \WidthTsfmFull{}
+K at matched coverage, by a margin of \InflLeakyWidthDiffPoint{} K (95\%
+CI [\InflLeakyWidthDiffCiLow{}, \InflLeakyWidthDiffCiHigh{}],
+day-blocked bootstrap, Section~\ref{sec:discussion-trivial}) that
+excludes zero entirely. This advantage is not an
+artifact of comparing a leakage-free multiplier against a
+leakage-optimistic ceiling; it survives even the most favorable trivial
+baseline this paper could construct.
+
+TimesFM-3's short-lead CRPS advantage reverses within the tested
+lead-time range -- first sign flip at \FirstSignFlipHours{}~h, durable
+reversal by \DurableCrossoverHours{}~h
+(Section~\ref{sec:results-leadtime}) -- and the mechanism behind that
+short-lead advantage has two independent parts, both now tested
+separately. The observation-history part does not support an
+information-asymmetry explanation: a persistence-augmented EMOS at
+0--24~h closes only \PersistenceGapClosedPct{}\% of the gap toward
+TimesFM-3. This result is not treated as confirming an architectural
+explanation instead, since the test itself has three limitations that
+keep it from cleanly distinguishing the two hypotheses -- a lead-pooled
+EMOS fit, a single linear persistence term against TimesFM-3's much
+richer context window, and a metric-dependent result (EMOS is
+significantly closer to nominal coverage in the same bucket where
+TimesFM-3 wins on CRPS) (Section~\ref{sec:discussion-mechanism}). The
+ensemble-spread/calibration part has also now been tested directly:
+TimesFM-3's covariate channel does accept a second, simultaneous input,
+and the model is genuinely sensitive to that channel's real
+informational content, not merely its presence
+(Section~\ref{sec:covariates}, Section~\ref{sec:limitations}) -- but
+supplying ensemble spread this way does not cleanly close the
+calibration deficit. CRPS worsens from \CrpsTsfmFull{} K to
+\CrpsTsfmTwoCov{} K; coverage moves closer to nominal, from
+\CoverageTsfmFull{} to \CoverageTsfmTwoCov{} -- a genuine calibration
+shift, not merely a wider interval -- but interval width also increases
+substantially, from \WidthTsfmFull{} K to \WidthTsfmTwoCov{} K, the
+expected cost of that shift under this paper's own standard of judging
+sharpness jointly with calibration, not independent evidence of a worse
+model (Section~\ref{sec:discussion-covariate-check}). The net effect is
+a shift along the calibration-sharpness trade-off together with a worse
+CRPS, not a clean improvement or a clean failure. Neither half of the
+mechanism therefore supports the information-asymmetry framing -- but
+neither confirms architecture as the explanation either: the channel
+accepted the second input and was demonstrably sensitive to it, and did
+shift its behavior in response, yet that shift did not convert into a
+net improvement within this study's zero-shot, frozen-weights setup. The
+short-lead advantage's mechanism remains an open interpretive question,
+with architecture one candidate explanation among others, not a
+confirmed one.
+
+Two questions that were open earlier in this project are now both
+resolved. EMOS's training/test ensemble-size mismatch is bounded and too
+small to be a material contributor to the calibration-sharpness
+comparison (Section~\ref{sec:limitations}). And whether ensemble spread
+could be supplied to TimesFM-3 as a second covariate, and whether doing
+so would change its calibration, has been tested directly
+(Section~\ref{sec:discussion-covariate-check}): it can be supplied, but
+doing so does not improve calibration in a way that supports the
+information-asymmetry framing (Section~\ref{sec:discussion-mechanism}).
+Neither resolution changes this paper's two central findings: on CRPS, a
+frozen, zero-shot time series foundation model is
+not competitive with a few days of station-specific training data, for
+either a trained statistical postprocessing method or a trivial
+one-parameter rescaling of the raw ensemble (though the exact training
+size at which this becomes statistically significant, rather than a raw
+point-estimate crossing, depends on block definition,
+Section~\ref{sec:results-significance}); and on calibration-sharpness,
+TimesFM-3's advantage over even a leakage-optimistic trivial rescaling is
+real. The evidence for both is for one time series foundation model,
+TimesFM-3; whether it generalizes to other pretrained time series models
+(e.g.\ Chronos-2, Moirai-2) is untested. Both findings are also specific
+to the target variable studied here, \(2\,\mathrm{m}\) temperature, where
+EMOS's Gaussian predictive family is close to ideally specified; for
+targets requiring non-Gaussian or target-specific reformulations, a
+trained method's small-sample advantage should not be assumed to appear
+as early.

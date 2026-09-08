@@ -1,0 +1,41 @@
+{
+  "model_version": "phase3-per-lead-significance-v1",
+  "config": {
+    "quantile_levels": [
+      0.1,
+      0.2,
+      0.3,
+      0.4,
+      0.5,
+      0.6,
+      0.7,
+      0.8,
+      0.9
+    ],
+    "bootstrap_seed": 0,
+    "n_matched_instances": 737809,
+    "lead_time_buckets": [
+      [
+        0.0,
+        24.0,
+        "0-24h"
+      ],
+      [
+        24.0,
+        72.0,
+        "24-72h"
+      ],
+      [
+        72.0,
+        120.0,
+        "72-120h"
+      ]
+    ],
+    "method_a": "emos_pooled_full_n_lead_pooled_training"
+  },
+  "config_hash": "802ab64a8970e461",
+  "git_sha": "b1134f947ca49ea64af761f48a56fdd2385ba83a",
+  "git_dirty": true,
+  "source_tree_sha256": "1e068b6f19868325a2766600257aa163368cb101f909754662e71dcb1b801942",
+  "written_at": "2026-09-06T22:44:49.426270+00:00"
+}

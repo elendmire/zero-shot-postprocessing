@@ -1,0 +1,28 @@
+cff-version: 1.2.0
+message: "If you use this code, please cite the paper below and/or this software release (DOI below)."
+title: "Zero-shot time series foundation models for statistical postprocessing of weather forecasts: how much training data do they replace?"
+authors:
+  - family-names: Avcı
+    given-names: Ömer Faruk
+    email: avcio20@itu.edu.tr
+    affiliation: "Department of Climate Science and Meteorological Engineering, Faculty of Aeronautics and Astronautics, İstanbul Technical University"
+    orcid: "https://orcid.org/0009-0008-6942-7113"
+date-released: 2026-09-08
+version: "1.0.0"
+identifiers:
+  - type: doi
+    value: "10.5281/zenodo.22662543"
+    description: "Concept DOI: always resolves to the latest archived version on Zenodo."
+repository-code: "https://github.com/elendmire/zero-shot-postprocessing"
+license: MIT
+type: software
+preferred-citation:
+  type: article
+  title: "Zero-shot time series foundation models for statistical postprocessing of weather forecasts: how much training data do they replace?"
+  authors:
+    - family-names: Avcı
+      given-names: Ömer Faruk
+      email: avcio20@itu.edu.tr
+      orcid: "https://orcid.org/0009-0008-6942-7113"
+  year: 2026
+  # journal / volume / doi: fill in once accepted and published.

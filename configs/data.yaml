@@ -1,0 +1,4 @@
+euppbench_version: "v1.0"
+targets: ["t2m", "w10"]
+max_lead_hours: 120
+split_name: "euppbench_default"
