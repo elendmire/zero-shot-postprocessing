@@ -113,7 +113,7 @@ Avcı, Ö. F. and Tan, E.: Zero-shot time series foundation models for statistic
 postprocessing of weather forecasts: how much training data do they replace?, submitted to
 *Adv. Stat. Clim. Meteorol. Oceanogr.*, 2026.
 
-Code archive: Zenodo, DOI to be added (see `CITATION.cff`).
+Code archive: Zenodo, https://doi.org/10.5281/zenodo.23299384 (v2.0.0).
 
 ## License
 The code is released under the MIT License (see `LICENSE`). The model weights and the data
