@@ -1,0 +1,28 @@
+{
+  "model_version": "amazon/chronos-2 (chronos-forecasting 2.3.2)",
+  "config": {
+    "model_id": "amazon/chronos-2",
+    "context_length": 160,
+    "quantile_levels": [
+      0.1,
+      0.2,
+      0.3,
+      0.4,
+      0.5,
+      0.6,
+      0.7,
+      0.8,
+      0.9
+    ],
+    "device": "cuda",
+    "n_series": 33757,
+    "n_rows": 706939,
+    "runtime_s": 82.75557541847229,
+    "max_stations": null
+  },
+  "config_hash": "b7be5c74b2af7ece",
+  "git_sha": "cb1da9f0f02b4c885841fde130c791da7128ccf9",
+  "git_dirty": true,
+  "source_tree_sha256": "b02c586111bd30076367dab418e1e3f9289dbf0bf4408373655d6c1f62167c69",
+  "written_at": "2026-10-09T06:11:42.578047+00:00"
+}

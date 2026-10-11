@@ -1,0 +1,25 @@
+{
+  "model_version": "training-size",
+  "config": {
+    "quantile_levels": [
+      0.1,
+      0.2,
+      0.3,
+      0.4,
+      0.5,
+      0.6,
+      0.7,
+      0.8,
+      0.9
+    ],
+    "compared_n_days": [
+      30,
+      90
+    ]
+  },
+  "config_hash": "66aa23c30ac327f7",
+  "git_sha": "cb1da9f0f02b4c885841fde130c791da7128ccf9",
+  "git_dirty": null,
+  "source_tree_sha256": "89d0d775d6442e98df2159113b373c37be34f545d4cccb7d21e31daae0c90c91",
+  "written_at": "2026-10-09T21:22:53.854046+00:00"
+}

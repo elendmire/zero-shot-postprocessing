@@ -1,0 +1,11 @@
+{
+  "model_version": "lead-time-curves",
+  "config": {
+    "note": "CRPS per lead time on the matched set"
+  },
+  "config_hash": "1d5198381529179e",
+  "git_sha": "cb1da9f0f02b4c885841fde130c791da7128ccf9",
+  "git_dirty": null,
+  "source_tree_sha256": "798d56902cd7bd77d0a6615e61d030a8d658a1f99fb0b76e4aa9654898160f4a",
+  "written_at": "2026-10-09T21:03:50.101072+00:00"
+}

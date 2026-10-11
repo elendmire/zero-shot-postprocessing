@@ -1,0 +1,50 @@
+{
+  "context_lengths": [
+    4,
+    8,
+    16,
+    40,
+    160,
+    640
+  ],
+  "quantile_levels": [
+    0.1,
+    0.2,
+    0.3,
+    0.4,
+    0.5,
+    0.6,
+    0.7,
+    0.8,
+    0.9
+  ],
+  "crps": "2 * mean pinball loss over all quantile levels (zeropp.eval.scores.crps_from_quantiles)",
+  "coverage": "fraction of obs in [q0.1, q0.9] (nominal 0.80)",
+  "lead_buckets_h": {
+    "0-24h": [
+      0,
+      24
+    ],
+    "24-72h": [
+      24,
+      72
+    ],
+    "72-120h": [
+      72,
+      120
+    ]
+  },
+  "n_common_instances": 583450,
+  "common_issue_date_min": "2017-06-10 00:00:00",
+  "common_issue_date_max": "2018-12-31 00:00:00",
+  "common_valid_time_min": "2017-06-10 00:00:00",
+  "common_valid_time_max": "2019-01-05 00:00:00",
+  "inputs": {
+    "4": "timesfm_context_4.parquet",
+    "8": "timesfm_context_8.parquet",
+    "16": "timesfm_context_16.parquet",
+    "40": "predictions_main.parquet",
+    "160": "timesfm_context_160.parquet",
+    "640": "timesfm_context_640.parquet"
+  }
+}

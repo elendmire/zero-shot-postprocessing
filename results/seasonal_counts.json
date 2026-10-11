@@ -1,0 +1,44 @@
+{
+  "model_version": "seasonal-training",
+  "config": {
+    "quantile_levels": [
+      0.1,
+      0.2,
+      0.3,
+      0.4,
+      0.5,
+      0.6,
+      0.7,
+      0.8,
+      0.9
+    ],
+    "k_grid": [
+      1,
+      2,
+      3,
+      5,
+      7,
+      9,
+      13,
+      26,
+      52,
+      105,
+      314
+    ],
+    "seeds": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "alpha": 0.05,
+    "days_per_case": 1.7924342913289117,
+    "season_basis": "issue-date month"
+  },
+  "config_hash": "fdf1a405a0e7a42a",
+  "git_sha": "cb1da9f0f02b4c885841fde130c791da7128ccf9",
+  "git_dirty": null,
+  "source_tree_sha256": "70eaecb14b5493fa49bafb1c95827bdff706fbe100ae417d015380ab3a1fe0db",
+  "written_at": "2026-10-10T13:13:14.081692+00:00"
+}

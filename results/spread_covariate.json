@@ -1,0 +1,24 @@
+{
+  "model_version": "spread-covariate",
+  "config": {
+    "quantile_levels": [
+      0.1,
+      0.2,
+      0.3,
+      0.4,
+      0.5,
+      0.6,
+      0.7,
+      0.8,
+      0.9
+    ],
+    "context_length": 160,
+    "n_canonical_matched_instances": 583450,
+    "n_matched_instances_this_run": 583450
+  },
+  "config_hash": "91f61525e83aa7d5",
+  "git_sha": "cb1da9f0f02b4c885841fde130c791da7128ccf9",
+  "git_dirty": true,
+  "source_tree_sha256": "aea91ef34ef91853c0eef446baf01359e0cf0b47117b6a5c1a03f1ebe2670ce0",
+  "written_at": "2026-10-10T14:34:24.263942+00:00"
+}

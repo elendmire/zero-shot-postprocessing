@@ -1,0 +1,30 @@
+{
+  "upload_type": "software",
+  "title": "Analysis code for: Zero-shot time series foundation models for statistical postprocessing of weather forecasts: how much training data do they replace?",
+  "creators": [
+    {
+      "name": "Avcı, Ömer Faruk",
+      "affiliation": "İstanbul Technical University",
+      "orcid": "0009-0008-6942-7113"
+    },
+    {
+      "name": "Tan, Elçin",
+      "affiliation": "İstanbul Technical University",
+      "orcid": "0000-0001-7677-6073"
+    }
+  ],
+  "description": "Python code that reproduces the tables and figures of the manuscript 'Zero-shot time series foundation models for statistical postprocessing of weather forecasts: how much training data do they replace?' (Avcı and Tan, submitted to Adv. Stat. Clim. Meteorol. Oceanogr., 2026). The pretrained time series foundation models TimesFM-3 and Chronos-2, used zero-shot with the ensemble mean as covariate, are compared with ensemble model output statistics (EMOS) variants, a distributional regression network and variance inflation, trained on subsets of the reforecast archive (year-round and season-matched), on rolling windows of recent forecasts and on other stations only, for probabilistic 2 m temperature forecasts at 49 German EUPPBench stations and lead times of 0-120 h, evaluated with the CRPS, coverage, rank histograms and Diebold-Mariano tests. The archive contains the analysis scripts, the aggregate results and the figures; the EUPPBench data (https://doi.org/10.5281/zenodo.7429236) and the model weights are not included.",
+  "access_right": "open",
+  "license": "mit",
+  "version": "2.0.0",
+  "language": "eng",
+  "keywords": [
+    "statistical postprocessing",
+    "ensemble forecasts",
+    "time series foundation models",
+    "EMOS",
+    "EUPPBench",
+    "2 m temperature",
+    "Python"
+  ]
+}

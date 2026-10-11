@@ -1,0 +1,36 @@
+{
+  "model_version": "reference-scores",
+  "config": {
+    "runs": {
+      "raw_ensemble_0": "results/predictions_main.parquet",
+      "tsfm3_4": "results/timesfm_context_4.parquet",
+      "tsfm3_8": "results/timesfm_context_8.parquet",
+      "tsfm3_16": "results/timesfm_context_16.parquet",
+      "tsfm3_40": "results/timesfm_context_40.parquet",
+      "tsfm3_160": "results/timesfm_context_160.parquet",
+      "tsfm3_640": "results/timesfm_context_640.parquet",
+      "chronos2_40": "results/chronos2_context_40.parquet",
+      "chronos2_160": "results/chronos2_context_160.parquet",
+      "chronos2_640": "results/chronos2_context_640.parquet"
+    },
+    "buckets": {
+      "0-24h": [
+        0,
+        24
+      ],
+      "24-72h": [
+        30,
+        72
+      ],
+      "72-120h": [
+        78,
+        120
+      ]
+    }
+  },
+  "config_hash": "a40bd2c45bf2f847",
+  "git_sha": "cb1da9f0f02b4c885841fde130c791da7128ccf9",
+  "git_dirty": null,
+  "source_tree_sha256": "24cabd887586f9186988765a7fa059f638d617b9d2c6b3485cfccdf8a32d56b8",
+  "written_at": "2026-10-09T19:41:23.418285+00:00"
+}

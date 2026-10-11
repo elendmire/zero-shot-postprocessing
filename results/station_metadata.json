@@ -1,0 +1,9 @@
+{
+  "model_version": "station-metadata",
+  "config": {},
+  "config_hash": "44136fa355b3678a",
+  "git_sha": "cb1da9f0f02b4c885841fde130c791da7128ccf9",
+  "git_dirty": null,
+  "source_tree_sha256": "7e52a6f39d8ec40841a9bbcc548dd0f515bd3917acba3aa50788d5cd9291a3ac",
+  "written_at": "2026-10-08T21:30:52.113776+00:00"
+}

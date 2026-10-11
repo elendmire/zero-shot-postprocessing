@@ -1,0 +1,27 @@
+{
+  "model_version": "error-metrics",
+  "config": {
+    "quantile_levels": [
+      0.1,
+      0.2,
+      0.3,
+      0.4,
+      0.5,
+      0.6,
+      0.7,
+      0.8,
+      0.9
+    ],
+    "point_forecast": "q0.5",
+    "added_methods": [
+      "emos_local_leadspec",
+      "rolling_emos_local_adaptive_w40"
+    ],
+    "rolling_window_days": 40
+  },
+  "config_hash": "0d6bbb3d96b87e36",
+  "git_sha": "cb1da9f0f02b4c885841fde130c791da7128ccf9",
+  "git_dirty": null,
+  "source_tree_sha256": "70eaecb14b5493fa49bafb1c95827bdff706fbe100ae417d015380ab3a1fe0db",
+  "written_at": "2026-10-10T12:50:11.872002+00:00"
+}

@@ -1,0 +1,38 @@
+{
+  "model_version": "emos-variants",
+  "config": {
+    "k_grid": [
+      1,
+      2,
+      3,
+      5,
+      7,
+      17,
+      50,
+      204,
+      611
+    ],
+    "n_cases_full": 4072,
+    "min_rows_lead": 20,
+    "min_rows_local": 5,
+    "buckets": {
+      "0-24h": [
+        0,
+        24
+      ],
+      "24-72h": [
+        30,
+        72
+      ],
+      "72-120h": [
+        78,
+        120
+      ]
+    }
+  },
+  "config_hash": "28402d788c98c5e8",
+  "git_sha": "cb1da9f0f02b4c885841fde130c791da7128ccf9",
+  "git_dirty": null,
+  "source_tree_sha256": "a20e0ee66cbffa59a14e9ae97c5836829d4d9e8eb13cf7e7a131508934c466c5",
+  "written_at": "2026-10-09T19:51:19.397202+00:00"
+}

@@ -1,0 +1,32 @@
+{
+  "model_version": "rolling-emos",
+  "config": {
+    "windows_days": [
+      2,
+      3,
+      5,
+      7,
+      10,
+      14,
+      20,
+      30,
+      40,
+      160
+    ],
+    "variants": [
+      "rolling_emos_pooled_leadspec",
+      "rolling_emos_local",
+      "rolling_emos_local_leadspec",
+      "rolling_emos_local_adaptive"
+    ],
+    "min_rows_lead": 20,
+    "min_rows_local": 5,
+    "min_rows_lead_local_adaptive": 20,
+    "verified_pairs_only": true
+  },
+  "config_hash": "6fd0c997d9d2d36c",
+  "git_sha": "cb1da9f0f02b4c885841fde130c791da7128ccf9",
+  "git_dirty": null,
+  "source_tree_sha256": "798d56902cd7bd77d0a6615e61d030a8d658a1f99fb0b76e4aa9654898160f4a",
+  "written_at": "2026-10-09T21:03:50.028016+00:00"
+}

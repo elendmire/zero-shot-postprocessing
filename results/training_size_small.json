@@ -1,0 +1,22 @@
+{
+  "model_version": "training-size-drn-small",
+  "config": {
+    "low_n_k_grid": [
+      1,
+      2,
+      3,
+      5,
+      7
+    ],
+    "drn_seeds": [
+      0,
+      1,
+      2
+    ]
+  },
+  "config_hash": "94ead090963fa6fb",
+  "git_sha": "cb1da9f0f02b4c885841fde130c791da7128ccf9",
+  "git_dirty": null,
+  "source_tree_sha256": "949f4ee11db847e03dcb62cbcde5c0934de1788a0fcf1da9c35b92fdf01836f4",
+  "written_at": "2026-10-10T12:33:39.717687+00:00"
+}

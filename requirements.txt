@@ -1,0 +1,15 @@
+numpy==2.4.6
+pandas==3.0.6
+scipy==1.17.1
+xarray==2026.9.0
+netCDF4==1.7.4
+pyarrow==26.0.0
+matplotlib==3.11.2
+cartopy==0.26.0
+torch==2.14.1
+pyyaml==6.0.3
+pytest==9.1.1
+
+# only for the zero-shot forecasts (scripts run_timesfm.py, run_chronos2.py, ...); needs a GPU
+# timesfm==3.0.1                 # checkpoint google/timesfm-3.0-pytorch
+# chronos-forecasting==2.3.2     # checkpoint amazon/chronos-2

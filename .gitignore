@@ -1,0 +1,31 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# OS
+.DS_Store
+
+# Data and model weights (obtained separately, see README)
+/data/
+/model_cache/
+
+# Per-instance prediction files (large; archived with the Zenodo release)
+results/predictions_main.*
+results/chronos2_predictions.parquet
+results/timesfm_context_*.parquet
+results/timesfm_nocov_context_*.parquet
+results/chronos2_context_*.parquet
+results/lead_matched_tsfm3_*.parquet
+results/lead_matched_chronos2_*.parquet
+results/gap24_tsfm3.parquet
+results/gap24_chronos2.parquet
+results/spread_covariate_raw.parquet
+cache/
+
+# Raster figure previews (vector PDF/SVG are committed)
+figures/*.png
+
+# Generated tables (scripts/make_tables.py)
+/output/

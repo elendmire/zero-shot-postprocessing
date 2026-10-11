@@ -1,0 +1,28 @@
+{
+  "model_version": "training-size",
+  "config": {
+    "low_n_k_grid": [
+      1,
+      2,
+      3,
+      5,
+      7
+    ],
+    "quantile_levels": [
+      0.1,
+      0.2,
+      0.3,
+      0.4,
+      0.5,
+      0.6,
+      0.7,
+      0.8,
+      0.9
+    ]
+  },
+  "config_hash": "f36a469817be3058",
+  "git_sha": "cb1da9f0f02b4c885841fde130c791da7128ccf9",
+  "git_dirty": null,
+  "source_tree_sha256": "89d0d775d6442e98df2159113b373c37be34f545d4cccb7d21e31daae0c90c91",
+  "written_at": "2026-10-09T21:23:22.582896+00:00"
+}
